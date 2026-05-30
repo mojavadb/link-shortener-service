@@ -20,18 +20,18 @@ function ShowResult(text: { text: string }) {
                     type="text"
                     value={text.text}
                     readOnly
-                    className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:border-indigo-500"
+                    className="px-4 flex-1 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:border-indigo-500"
                     dir="ltr"
                 />
                 <button
                     onClick={handleCopy}
-                    className={`px-3 rounded-lg transition-all duration-200 flex items-center gap-2
+                    className={`px-2 rounded-lg transition-all duration-200 flex items-center gap-2
             ${copied
                             ? "bg-green-500 hover:bg-green-600"
                             : "bg-indigo-700 hover:bg-indigo-800"
-                        } text-white`}
+                        } text-white cursor-pointer text-sm`}
                 >
-                    {copied ? (<span>کپی شد</span>) : (<span>کپی</span>)}
+                    {copied ? (<span>کپی شد</span>) : (<span>کپی کردن</span>)}
                 </button>
             </div>
             <button
