@@ -59,6 +59,7 @@ function Home() {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setInputValue(e.target.value)
                     }
+                    dir="ltr"
                     className="p-2 mb-2 w-full text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition-all 
             duration-200 peer"
