@@ -1,65 +1,86 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React from "react";
+import { validateUrl } from "@/utils/urlValidator";
+import AdvancedSpinner from "@/components/AdvancedSpinner";
+import ShowResult from "@/components/ShowResult";
+
+const DOMAIN = "http://localhost:3000";
+
+function Home() {
+  const [inputValue, setInputValue] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
+  const [isLoading, setIsLoading] = React.useState<boolean>();
+  const [fakeCode, setFakeCode] = React.useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+
+    const url = inputValue.trim();
+    const validation = validateUrl(inputValue);
+
+    if (url) {
+      if (!validation.isValid) {
+        setError(validation.error || "این لینک نامعتبر است");
+        setIsLoading(false);
+        return;
+      }
+
+      setTimeout(() => {
+        setFakeCode("124dki");
+        setIsLoading(false);
+        setInputValue("");
+      }, 2000);
+
+    } else {
+      setError("لینک ارسالی نباید خالی باشد.");
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="px-6 py-4 md:px-18 md:py-12 bg-white flex items-center justify-center rounded-4 border-gray-200">
+        {isLoading ? <AdvancedSpinner size={28} text="لطفا چند لحظه صبر کنید" fullScreen={false} /> :
+          <div>
+            {fakeCode ?
+              <ShowResult text={`${DOMAIN}/${fakeCode}`} />
+              :
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <label className="text-center mb-3 text-red-600 font-bold text-3xl" htmlFor="primaryLink">سرویس کوتاه کننده لینک</label>
+                <div>
+                  <input
+                    type="text"
+                    id="primaryLink"
+                    value={inputValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setInputValue(e.target.value)
+                    }
+                    className="p-2 mb-2 w-full text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
+            focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition-all 
+            duration-200 peer"
+                    placeholder="ex: https://github.com/mojavadb/link-shortener-service"
+                  />
+                  <span className="block h-4 w-full text-sm font-semibold text-red-600">{error}</span>
+                </div>
+                <div className="px-8 flex justify-center items-center">
+                  <button
+                    type="submit"
+                    className="px-6 md:px-9 py-2 rounded-2xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
+                  >
+                    ساخت لینک کوتاه
+                  </button>
+                </div>
+              </form>}
+          </div>
+        }
+
+      </div>
     </div>
   );
 }
+
+export default Home;
