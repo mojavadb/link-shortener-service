@@ -1,5 +1,6 @@
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
+import { Metadata } from "next";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -7,6 +8,11 @@ const vazirmatn = Vazirmatn({
   weight: ["400", "500", "700"],
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  title: "link shortener service",
+  description: "a service that receives an endpoint URL from the user and then gives back a shortend URL for it.",
+};
 
 export default function RootLayout({
   children,
