@@ -3,8 +3,9 @@ import "./globals.css";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
-  subsets: ["latin"], // ✅ فقط "latin" کافی است (فارسی را هم پوشش می‌دهد)
-  weight: ["400", "500", "700"], // اختیاری: وزن‌های مورد نیاز
+  subsets: ["latin"], 
+  weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 export default function RootLayout({
