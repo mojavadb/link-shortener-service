@@ -44,7 +44,7 @@ function Home() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="px-6 py-4 md:px-18 md:py-12 bg-white flex items-center justify-center rounded-4 border-gray-200">
-        {isLoading ? <AdvancedSpinner size={28} text="لطفا چند لحظه صبر کنید" fullScreen={false} /> :
+        {isLoading ? <AdvancedSpinner size={28} text="لطفا چند لحظه صبر کنید" fullScreen={true} /> :
           <div>
             {fakeCode ?
               <ShowResult text={`${DOMAIN}/${fakeCode}`} />
