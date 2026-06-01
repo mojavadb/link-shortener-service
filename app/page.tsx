@@ -392,7 +392,7 @@ function Home() {
 
             return (
               <button type="button"
-                className="px-2 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
+                className="px-2 h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                 onClick={() => undoDelete()}
               >
                 بازگردانی ({remaining})
