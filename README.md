@@ -42,7 +42,7 @@ cd link-shortener-service
 2. **نصب وابستگی ها**
 
 npm install
-# یا
+### یا
 yarn install
 # یا
 pnpm install
