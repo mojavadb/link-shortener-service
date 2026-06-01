@@ -59,7 +59,7 @@ function Home() {
       }
     };
     checkExpired();
-    const interval = setInterval(checkExpired, 2000);
+    const interval = setInterval(checkExpired, 30000);
     return () => clearInterval(interval);
   }, [existingLinks]);
 
