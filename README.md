@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📎 پروژه کوتاه‌کننده لینک (Link Shortener Service)
 
-## Getting Started
+این تسک در دو مرحله پیاده سازی شده است. در این branch پروژه فقط به صورت فرانت اند پیاده سازی شده است. در شاخه بعدی پروژه به صورت فول استک پیاده سازی شده است.
+در بخش فرانت اند همه تسک های ضروری و اختیاری به جز تست نویسی انجام شده است.
+## امکانات
 
-First, run the development server:
+- کوتاه‌سازی لینک‌های بلند
+- **کد سفارشی ۶ رقمی** (اختیاری)
+- **زمان انقضا** برای لینک‌ها (روز، ساعت، دقیقه)
+- **جستجو** در لینک‌های ذخیره شده
+- **ذخیره خودکار** در localStorage
+- **حذف لینک** از لیست
+- **نمایش QR Code** لینک کوتاه شده
+- **تایمر زنده** برای نمایش زمان باقیمانده
+- **تایید اعتبار** لینک قبل از کوتاه‌سازی
+- **مسیریابی داینامیک** به لینک اصلی
 
-```bash
+## تکنولوژی‌ها
+
+| تکنولوژی | نسخه | کاربرد |
+|-----------|-------|---------|
+| Next.js | 16.2.6 | فریمورک اصلی |
+| React | 19.2.4 | کتابخانه UI |
+| TypeScript | 5 | نوع‌گذاری امن |
+| Tailwind CSS | 4 | استایل‌دهی |
+| React QR Code | 2.0.21 | تولید QR |
+
+## نصب و راه‌اندازی
+
+### پیش نیاز ها
+
+- Node.js نسخه 18 یا بالاتر
+- npm یا yarn یا pnpm
+
+### مراحل نصب
+
+1. **کلون کردن مخزن**
+
+git clone https://github.com/mojavadb/link-shortener-service.git
+cd link-shortener-service
+
+2. **نصب وابستگی ها**
+
+npm install
+# یا
+yarn install
+# یا
+pnpm install
+
+3. **اجرای پروژه در سیستم لوکال**
+
 npm run dev
-# or
+# یا
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# یا
+pnpm dev (recom)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. **باز کردن در مرورگر**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000/
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. **نکات**
 
-## Learn More
+برای فونت دهی از اسکریپت آماده گوگل فونتس استفاده کردم و نیازه که برای اجرای پروژه در ابتدا به اینترنت متصل باشید البته اگر هم متصل نباشه ایرادی نداره فقط فونت نداره. (منطق برنامه و ظاهر به درستی کار میکنه) 
 
-To learn more about Next.js, take a look at the following resources:
+در این شاخه از لوکال استورج استفاده شده است که در پروژه واقعی باید در پایگاه داده ذخیره شود
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+اگر مجددا فرصتی باشد به بهبود رابط کاربری و انیمیشنی کردن ظاهر برنامه میپردازم.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+فقط تست نویسی رو انجام ندادم. اگر فرصت داشتم احتمالا اون مورد رو هم انجام میدادم
