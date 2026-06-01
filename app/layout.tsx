@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa" dir="rtl" className={vazirmatn.variable}>
-      <body className="font-sans">{children}</body>
+    <html lang="fa" dir="rtl" className={vazirmatn.className}>
+      <body>{children}</body>
     </html>
   );
 }
