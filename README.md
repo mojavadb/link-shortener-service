@@ -42,17 +42,17 @@ cd link-shortener-service
 2. **نصب وابستگی ها**
 
 npm install
-### یا
+#### or
 yarn install
-# یا
+#### or
 pnpm install
 
 3. **اجرای پروژه در سیستم لوکال**
 
 npm run dev
-# یا
+#### or
 yarn dev
-# یا
+#### or
 pnpm dev (recom)
 
 4. **باز کردن در مرورگر**
