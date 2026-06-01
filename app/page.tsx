@@ -31,6 +31,7 @@ function Home() {
   const [errCustomCodeV, setErrCustomCodeV] = React.useState<string>("");
   const [now, setNow] = React.useState(Date.now());
 
+  // اینجا یک تایمر برای شمارش معکوس برای انقضای هر کد هست. میان از اینجا زمان باقی موند رو میبینن
   React.useEffect(() => {
     const timer = setInterval(() => {
       setNow(Date.now());
@@ -39,8 +40,9 @@ function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // این زمان باقی مانده را حساب و کتاب میکنه
   const timeLeft = (expiresAt?: number) => {
-    if (!expiresAt) return "انقضا نداره";
+    if (!expiresAt) return "بدون انقضا";
 
     const remaining = expiresAt - now;
 
@@ -57,6 +59,7 @@ function Home() {
     return `${seconds} ثانیه`;
   };
 
+  // این دو مورد اونایی که منقضی شدن رو پیدا میکنن
   const checkExpired = React.useCallback(() => {
     setExistingLinks(prevLinks => {
       const now = Date.now();
@@ -69,14 +72,22 @@ function Home() {
       }
       return prevLinks;
     });
-  }, [])
+  }, []);
 
+  React.useEffect(() => {
+    checkExpired();
+    const interval = setInterval(checkExpired, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // از لوکال استورج آیتم ها رو میگیره و میریزه توی استیت
   React.useEffect(() => {
     const savedLinks = JSON.parse(localStorage.getItem("links") || "[]");
     setExistingLinks(savedLinks);
     return;
   }, []);
 
+  // جستجو
   React.useEffect(() => {
     if (searchLink.trim() === "") {
       setFilterLinks(existingLinks);
@@ -89,12 +100,6 @@ function Home() {
     }
 
   }, [searchLink, existingLinks]);
-
-  React.useEffect(() => {
-    checkExpired();
-    const interval = setInterval(checkExpired, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   console.log(existingLinks);
 
@@ -111,11 +116,13 @@ function Home() {
     const validation = validateUrl(inputV);
 
     if (url) {
+      // اگر لینک ورودی اروری داشته باشه همینجا پیدا میکنیم
       if (!validation.isValid) {
         setErrorInputV(validation.error || "این لینک نامعتبر است");
         setLoad(false);
         return;
       }
+      // اگر کد کاستوم کاربر ایراد داشته باشه اینجا پیدا میکنیم
       if (customCodeV.trim()) {
         if (!(/^[a-z0-9]*$/.test(customCodeV))) {
           setErrCustomCodeV("کد باید شامل اعداد یا حروف کوچک باشد");
@@ -136,6 +143,8 @@ function Home() {
         }
       }
 
+      // اگر قبلا لینک ثبت شده باشه همون کدی که قبلا ساخته شده رو بر میگردونیم در غیر این صورت
+      // میریم و یک کد رندوم میسازیم و اگر احیانا قبلا وجود داشت برمیگیردیم و دوباره کد رندوم میسازیم
       const duplicateLink = existingLinks.find(link => link.mainUrl === url);
       if (duplicateLink) {
         setErrorInputV(`این لینک با کد ${duplicateLink.finalCode} موجود است`);
@@ -148,11 +157,11 @@ function Home() {
             newGeneratedCode = Math.random().toString(36).substring(2, 8);
           } while (existingLinks.some(link => link.finalCode === newGeneratedCode));
         }
-
+        // محاسبه تاریخ انقضا
         const delay = ((dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000);
-
         const expirationTime = delay === 0 ? undefined : Date.now() + delay;
 
+        // ساخت لینک جدید
         const newLink = {
           id: Date.now(),
           mainUrl: inputV,
@@ -160,6 +169,7 @@ function Home() {
           createdAt: Date.now(),
           expiresAt: expirationTime
         };
+        // اضافه کردن لینک جدید به استیت قبلی
         const updatedLinks = [...existingLinks, newLink];
         console.log(updatedLinks);
         setExistingLinks(updatedLinks);
@@ -177,7 +187,8 @@ function Home() {
     }
   };
 
-  function handleDeleteItem(itemId: number) {
+  // اینجا آیتم ها را اگر بخواهیم حذف میکنیم
+  function handleDelete(itemId: number) {
     const deletedLinks = existingLinks.filter(link => link.id !== itemId);
     console.log(deletedLinks);
     setExistingLinks(deletedLinks);
@@ -332,7 +343,7 @@ function Home() {
                 </div>
                 <button type="button"
                   className="px-2 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
-                  onClick={() => handleDeleteItem(item.id)}
+                  onClick={() => handleDelete(item.id)}
                 >حذف</button>
               </li>
             )}
