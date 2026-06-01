@@ -1,4 +1,5 @@
 import React from "react";
+import QRCode from "react-qr-code";
 
 function ShowResult(text: { text: string }) {
     const [copied, setCopied] = React.useState<boolean>(false);
@@ -40,6 +41,16 @@ function ShowResult(text: { text: string }) {
             >
                 ساخت لینک جدید
             </button>
+            <div className="w-full flex items-center justify-center">
+                <div className="p-4 bg-white inline-block">
+                    <QRCode
+                        value={text.text}
+                        size={128}
+                        bgColor="#FFFFFF"
+                        fgColor="#000000"
+                    />
+                </div>
+            </div>
         </div>
     );
 };
