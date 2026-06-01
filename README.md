@@ -45,7 +45,7 @@ npm install
 #### or
 yarn install
 #### or
-pnpm install
+pnpm install (recom)
 
 3. **اجرای پروژه در سیستم لوکال**
 
