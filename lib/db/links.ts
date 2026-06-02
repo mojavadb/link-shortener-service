@@ -8,13 +8,12 @@ export interface Link {
   createdAt: Date;
 }
 
-// آدرس کامل فایل JSON
+// آدرس ریکورد ها
 const dbPath = path.join(process.cwd(), 'data', 'links.json');
 console.log("111111", dbPath);
 
-// ایجاد جدول با کلید اصلی 'id' و داده اولیه خالی
 export const linksTable = yolodb<Link>(
-  dbPath,      // مسیر فایل
-  'id',        // فیلد کلید اصلی
-  []           // داده اولیه (آرایه خالی)
+  dbPath, 
+  'id', 
+  [] 
 );
