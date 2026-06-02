@@ -28,9 +28,10 @@ export async function POST(request: NextRequest) {
     }
 
     const newUser: Link = {
-      id: Date.now().toString(),
-      url: inputV,
-      createdAt: new Date(),  
+      id: Date.now(),
+      mainUrl: inputV,
+      finalCode: "11",
+      createdAt: Date.now(),  
     };
 
     linksTable.insert(newUser);

@@ -3,9 +3,11 @@ import path from 'path';
 
 // چون توی api به این نوع داده نیاز داریم export میکنیم
 export interface Link {
-  id: string;
-  url: string;
-  createdAt: Date;
+  id: number;
+  mainUrl: string;
+  finalCode: string;
+  createdAt: number;
+  expiresAt?: number;
 }
 
 // آدرس ریکورد ها
