@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json(links);
   } catch (error) {
     return NextResponse.json(
-      { error: 'خطا در دریافت کاربران' },
+      { error: 'خطا در دریافت لینک های ثبت شده' },
       { status: 500 }
     );
   }
