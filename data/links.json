@@ -1,0 +1,27 @@
+{
+  "json": [
+    {
+      "id": "1780418802200",
+      "name": "ali rezaee1",
+      "email": "ali@example.com",
+      "createdAt": "2026-06-02T16:46:42.200Z",
+      "status": "active"
+    },
+    {
+      "id": "1780419835251",
+      "url": "ff",
+      "createdAt": "2026-06-02T17:03:55.251Z"
+    }
+  ],
+  "meta": {
+    "values": {
+      "0.createdAt": [
+        "Date"
+      ],
+      "1.createdAt": [
+        "Date"
+      ]
+    },
+    "v": 1
+  }
+}
