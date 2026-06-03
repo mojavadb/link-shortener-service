@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { inputV, generatedCode } = body;
+    const { inputV } = body;
 
     if (!inputV) {
       return NextResponse.json(
@@ -26,23 +26,21 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    if (!generatedCode){
-      return NextResponse.json(
-        { error: 'کد تولید نشده است' },
-        { status: 400 }
-      );
-    }
+
+    const newGeneratedCode = Math.random().toString(36).substring(2, 8);
 
     const newUser: Link = {
       id: Date.now(),
       mainUrl: inputV,
-      finalCode: generatedCode,
+      finalCode: newGeneratedCode,
       createdAt: Date.now(),  
     };
 
     linksTable.insert(newUser);
     
-    return NextResponse.json("لینک جدید ثبت شد", { status: 201 });
+    return NextResponse.json({
+      "code": newGeneratedCode
+    }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: error },
