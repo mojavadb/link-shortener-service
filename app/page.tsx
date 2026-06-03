@@ -34,203 +34,20 @@ function Home() {
   const [deletedL, setDeletedL] = React.useState<any>(null);
   const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
   const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
+  
+  function timeLeft(x: any){
 
-  // اینجا یک تایمر برای شمارش معکوس برای انقضای هر کد هست. میان از اینجا زمان باقی موند رو میبینن
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
+  }
+  function handleDelete(id: any){
+    return id;
+  }
+  function handleSubmit(){
 
-    return () => clearInterval(timer);
-  }, []);
+  }
+  function undoDelete(){
 
-  // این زمان باقی مانده را حساب و کتاب میکنه
-  const timeLeft = (expiresAt?: number) => {
-    if (!expiresAt) return "بدون انقضا";
-
-    const remaining = expiresAt - now;
-
-    if (remaining <= 0) return "منقضی";
-
-    const days = Math.floor(remaining / 86400000);
-    const hours = Math.floor((remaining % 86400000) / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
-    const seconds = Math.floor((remaining % 60000) / 1000);
-
-    if (days > 0) return `${days} روز ${hours} ساعت`;
-    if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
-    if (minutes > 0) return `${minutes} دقیقه ${seconds} ثانیه`;
-    return `${seconds} ثانیه`;
-  };
-
-  // این دو مورد اونایی که منقضی شدن رو پیدا میکنن
-  const checkExpired = React.useCallback(() => {
-    setExistingL(prevLinks => {
-      const now = Date.now();
-      const validLinks = prevLinks.filter(link =>
-        !link.expiresAt || link.expiresAt > now
-      );
-      if (validLinks.length !== prevLinks.length) {
-        localStorage.setItem("links", JSON.stringify(validLinks));
-        return validLinks;
-      }
-      return prevLinks;
-    });
-  }, []);
-
-  React.useEffect(() => {
-    checkExpired();
-    const interval = setInterval(checkExpired, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // از لوکال استورج آیتم ها رو میگیره و میریزه توی استیت
-  React.useEffect(() => {
-    const savedLinks = JSON.parse(localStorage.getItem("links") || "[]");
-    setExistingL(savedLinks);
-    return;
-  }, []);
-
-  // جستجو
-  React.useEffect(() => {
-    if (searchL.trim() === "") {
-      setFilterL(existingL);
-    } else {
-      const filtered = existingL.filter(link =>
-        link.mainUrl.toLowerCase().includes(searchL.toLowerCase()) ||
-        link.finalCode.toLowerCase().includes(searchL.toLowerCase())
-      );
-      setFilterL(filtered);
-    }
-
-  }, [searchL, existingL]);
-
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    setErrorInputV("");
-    setErrCustomCodeV("");
-    setLoad(true);
-
-    let newGeneratedCode: string = "";
-
-    const url = inputV.trim();
-    const validation = validateUrl(inputV);
-
-    if (url) {
-      // اگر لینک ورودی اروری داشته باشه همینجا پیدا میکنیم
-      if (!validation.isValid) {
-        setErrorInputV(validation.error || "این لینک نامعتبر است");
-        setLoad(false);
-        return;
-      }
-      // اگر کد کاستوم کاربر ایراد داشته باشه اینجا پیدا میکنیم
-      if (customCodeV.trim()) {
-        if (!(/^[a-z0-9]*$/.test(customCodeV))) {
-          setErrCustomCodeV("کد باید شامل اعداد یا حروف کوچک باشد");
-          setLoad(false);
-          return;
-        }
-        if (!(customCodeV.length === 6)) {
-          setErrCustomCodeV("تعداد کاراکتر ها باید شش باشد");
-          setLoad(false);
-          return;
-        }
-        if (!existingL.some(link => link.finalCode === customCodeV)) {
-          newGeneratedCode = customCodeV;
-        } else {
-          setErrCustomCodeV("این کد قبلاً استفاده شده است");
-          setLoad(false);
-          return;
-        }
-      }
-
-      // اگر قبلا لینک ثبت شده باشه همون کدی که قبلا ساخته شده رو بر میگردونیم در غیر این صورت
-      // میریم و یک کد رندوم میسازیم و اگر احیانا قبلا وجود داشت برمیگیردیم و دوباره کد رندوم میسازیم
-      const duplicateLink = existingL.find(link => link.mainUrl === url);
-      if (duplicateLink) {
-        setErrorInputV(`این لینک با کد ${duplicateLink.finalCode} موجود است`);
-        setLoad(false);
-        setInputV("");
-      } else {
-        if (!newGeneratedCode) {
-
-          do {
-            newGeneratedCode = Math.random().toString(36).substring(2, 8);
-          } while (existingL.some(link => link.finalCode === newGeneratedCode));
-        }
-        // محاسبه تاریخ انقضا
-        const delay = ((dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000);
-        const expirationTime = delay === 0 ? undefined : Date.now() + delay;
-
-        // ساخت لینک جدید
-        const newLink = {
-          id: Date.now(),
-          mainUrl: inputV,
-          finalCode: newGeneratedCode,
-          createdAt: Date.now(),
-          expiresAt: expirationTime
-        };
-        // اضافه کردن لینک جدید به استیت قبلی
-        const updatedLinks = [...existingL, newLink];
-        console.log(updatedLinks);
-        setExistingL(updatedLinks);
-
-        setTimeout(() => {
-          setGeneratedCode(newGeneratedCode);
-          localStorage.setItem("links", JSON.stringify(updatedLinks));
-          setLoad(false);
-          setInputV("");
-        }, 2000);
-      }
-    } else {
-      setErrorInputV("لینک ارسالی نباید خالی باشد.");
-      setLoad(false);
-    }
-  };
-
-
-  // اینجا آیتم ها را اگر بخواهیم حذف میکنیم
-  // 3 ثانیه وقت داریم برگردونیم
-  function handleDelete(itemId: number) {
-    const itemToDelete = existingL.find(link => link.id === itemId);
-
-    if (undoTimeout) {
-      clearTimeout(undoTimeout);
-    }
-
-    // حذف موقت از لیست اصلی
-    const newLinks = existingL.filter(link => link.id !== itemId);
-    setExistingL(newLinks);
-    localStorage.setItem("links", JSON.stringify(newLinks));
-
-    setDeletedL(itemToDelete);
-    setDeletedAt(Date.now());
-
-    // تنظیم تایمر ۵ ثانیه برای حذف دائمی
-    const timeout = setTimeout(() => {
-      setDeletedL(null);
-      console.log("لینک برای همیشه حذف شد");
-    }, 5000);
-
-    setUndoTimeout(timeout);
   }
 
-  function undoDelete() {
-    if (deletedL) {
-      const restoredLinks = [...existingL, deletedL];
-      setExistingL(restoredLinks);
-      localStorage.setItem("links", JSON.stringify(restoredLinks));
-
-      if (undoTimeout) {
-        clearTimeout(undoTimeout);
-      }
-      setDeletedL(null);
-      setUndoTimeout(null);
-    }
-    return;
-  }
 
   return (
     <div className="md:flex md:items-start md:justify-center md:gap-18 min-h-screen bg-gray-100 p-2">
@@ -376,10 +193,10 @@ function Home() {
                   <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                 </div>
                 <div className="text-xs text-gray-400 mt-1">
-                  {timeLeft(item.expiresAt)}
+                  {/*timeLeft(item.expiresAt)*/}
                 </div>
                 <button type="button"
-                disabled = {deletedL ? true : false}
+                  disabled={deletedL ? true : false}
                   className="px-2 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                   onClick={() => handleDelete(item.id)}
                 >حذف</button>

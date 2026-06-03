@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { inputV } = body;
+    const { inputV, generatedCode } = body;
 
     if (!inputV) {
       return NextResponse.json(
@@ -26,11 +26,17 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    if (!generatedCode){
+      return NextResponse.json(
+        { error: 'کد تولید نشده است' },
+        { status: 400 }
+      );
+    }
 
     const newUser: Link = {
       id: Date.now(),
       mainUrl: inputV,
-      finalCode: "11",
+      finalCode: generatedCode,
       createdAt: Date.now(),  
     };
 
