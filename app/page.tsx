@@ -16,6 +16,43 @@ interface LinkItem {
   expiresAt?: number;
 }
 
+async function fetchLinks() {
+  const response = await fetch(
+    `${DOMAIN}/api/short-links`, {
+    method: "Get",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!response.ok) {
+    throw new Error("ارتباط با موفقیت صورت نگرفت");
+  }
+  const links = await response.json();
+  return links;
+}
+
+async function createNewLink(url: string) {
+  try {
+    const response = await fetch(
+      `${DOMAIN}/api/short-links`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        inputV: url
+      })
+    }
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+
+}
+
 function Home() {
   // V = Value // L = Link
   const [inputV, setInputV] = React.useState<string>("");
@@ -34,17 +71,37 @@ function Home() {
   const [deletedL, setDeletedL] = React.useState<any>(null);
   const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
   const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
-  
-  function timeLeft(x: any){
+
+  React.useEffect(() => {
+    async function links() {
+      const links: LinkItem[] = await fetchLinks();
+      setExistingL(links);
+    }
+    links();
+  }, [])
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+    const res = await createNewLink(inputV);
+    if (res.code) {
+      setGeneratedCode(res.code);
+      const links: LinkItem[] = await fetchLinks();
+      setExistingL(links);
+    }
+    if (res.message) {
+      if (res.message[1] === "inputV") {
+        setErrorInputV(res.message[0]);
+      }
+    }
+  }
+
+  function timeLeft(x: any) {
 
   }
-  function handleDelete(id: any){
+  function handleDelete(id: any) {
     return id;
   }
-  function handleSubmit(){
-
-  }
-  function undoDelete(){
+  function undoDelete() {
 
   }
 
@@ -57,7 +114,7 @@ function Home() {
             {generatedCode ?
               <ShowResult text={`${DOMAIN}/${generatedCode}`} />
               :
-              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
                 <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
                 <div>
                   <label className="text-yellow-800 text-sm" htmlFor="primaryLink">نام آدرس:</label>
@@ -186,7 +243,7 @@ function Home() {
 
           </form>
           <ul className="w-full">
-            {filterL.map(item =>
+            {existingL.map(item =>
               <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
                 <div className="flex flex-col gap-2 text-sm" dir="ltr">
                   <Link href={`${DOMAIN}/${item.finalCode}`} className="text-sm text-red-800">{DOMAIN.substring(7)}/{item.finalCode}</Link>

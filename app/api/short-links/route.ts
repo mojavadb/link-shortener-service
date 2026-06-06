@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { linksTable, Link } from '@/lib/db/links';
+import { validateUrl } from '@/utils/urlValidator';
 
 export async function GET() {
   try {
@@ -20,22 +21,35 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { inputV } = body;
 
-    if (!inputV) {
+    // این یک میدل ور برای اعتبار سنجی لینک ورودی است
+    if(!validateUrl(inputV).isValid){
       return NextResponse.json(
-        { error: 'لینک اصلی را وارد کنید.' },
-        { status: 400 }
+        {message: [validateUrl(inputV).error, "inputV"]},
+        {status: 400}
       );
     }
 
-    const newGeneratedCode = Math.random().toString(36).substring(2, 8);
+    // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
+    if (linksTable.all().find(link => link.mainUrl === inputV)){
+      return NextResponse.json(
+        {message: [`این لینک از قبل با کد ${linksTable.all().find(link => link.mainUrl === inputV)?.finalCode} وجود دارد.`, "inputV"]},
+        {status: 400}
+      );
+    }
 
+    // اینجا میسازیم کد تصادفی رو که قبلا در پایگاه داده نبوده
+    let newGeneratedCode : string = "";
+    do {
+      newGeneratedCode = Math.random().toString(36).substring(2, 8);
+    } while (linksTable.all().some(link => link.finalCode === newGeneratedCode));
+
+    // ساخت و اضافه کردن لینک جدید
     const newUser: Link = {
       id: Date.now(),
       mainUrl: inputV,
       finalCode: newGeneratedCode,
       createdAt: Date.now(),  
     };
-
     linksTable.insert(newUser);
     
     return NextResponse.json({
