@@ -16,7 +16,7 @@ interface LinkItem {
     expiresAt?: number;
 }
 
-async function createNewLink(url: string) {
+async function createNewLink(url: string, code: string) {
     try {
         const response = await fetch(
             `${DOMAIN}/api/short-links`, {
@@ -25,7 +25,8 @@ async function createNewLink(url: string) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                inputV: url
+                inputV: url,
+                customCode: code
             })
         }
         );
@@ -40,10 +41,11 @@ async function createNewLink(url: string) {
 export default function Main({ data }: { data: LinkItem[] }) {
     // V = Value // L = Link
     const [inputV, setInputV] = React.useState<string>("");
-    const [errorInputV, setErrorInputV] = React.useState<string>("");
 
     const [load, setLoad] = React.useState<boolean>(false);
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
+
+    const [error, setError] = React.useState<string[]>([]);
 
     //   const [existingL, setExistingL] = React.useState<LinkItem[]>([]);
     const [searchL, setSearchL] = React.useState<string>("");
@@ -53,7 +55,6 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [minuteV, setMinuteV] = React.useState<number>(0);
 
     const [customCodeV, setCustomCodeV] = React.useState<string>("");
-    const [errCustomCodeV, setErrCustomCodeV] = React.useState<string>("");
 
     const [now, setNow] = React.useState<number>(Date.now());
     const [deletedL, setDeletedL] = React.useState<any>(null);
@@ -67,14 +68,13 @@ export default function Main({ data }: { data: LinkItem[] }) {
 
     async function handleSubmit(e: any) {
         e.preventDefault();
-        const res = await createNewLink(inputV);
+        const res = await createNewLink(inputV, customCodeV);
         if (res.code) {
             setGeneratedCode(res.code);
         }
         if (res.message) {
-            if (res.message[1] === "inputV") {
-                setErrorInputV(res.message[0]);
-            }
+            setError(res.message);
+            console.log(res.message);
         }
     }
 
@@ -110,7 +110,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                             <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
                                 <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
                                 <div>
-                                    <label className="text-yellow-800 text-sm" htmlFor="primaryLink">نام آدرس:</label>
+                                    <label className="text-yellow-800 text-sm" htmlFor="primaryLink">آدرس:</label>
                                     <input
                                         type="text"
                                         id="primaryLink"
@@ -124,7 +124,6 @@ export default function Main({ data }: { data: LinkItem[] }) {
             duration-200 peer"
                                         placeholder="ex: https://github.com/mojavadb/link-shortener-service"
                                     />
-                                    <span className="block h-4 w-full text-sm font-semibold text-red-600">{errorInputV}</span>
                                 </div>
                                 <div>
                                     <label className="text-yellow-800 text-sm" htmlFor="primaryLink">کد نهایی (اختیاری):</label>
@@ -141,7 +140,6 @@ export default function Main({ data }: { data: LinkItem[] }) {
             duration-200 peer"
                                         placeholder="ex: ev23cw"
                                     />
-                                    <span className="block h-4 w-full text-sm font-semibold text-red-600">{errCustomCodeV}</span>
                                 </div>
                                 <div>
                                     <label className="block mb-4 text-yellow-800 text-sm" htmlFor="primaryLink">انقضا لینک: (خالی یعنی از بین نمیرود)</label>
@@ -199,6 +197,15 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                         <span className="py-1">m</span>
 
                                     </div>
+                                </div>
+                                <div>
+                                    {error?.map(err => 
+                                        <p key={err}
+                                        className="block h-4 w-full text-sm font-semibold text-red-600">
+                                            {err}
+                                        </p>
+                                    )}
+                                    
                                 </div>
                                 <div className="px-8 flex justify-center items-center">
                                     <button

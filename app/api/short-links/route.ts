@@ -19,29 +19,50 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { inputV } = body;
-
+    const { inputV, customCode }: { inputV: string, customCode: string } = body;
+    const errors: string[] = [];
+    // چک کردن فرمت کد نهایی که کاربر داده. باید شش رقمی باشه و همچنین میتونه خالی باشه
+    // در ضمن نمیتونه غیر از حروف کوچک و اعداد انگلیسی استفاده کنه
+    if (customCode.length !== 6) {
+      if (customCode.length !== 0) {
+        errors.push("کد نهایی باید شش رقمی باشد");
+      }
+    } else {
+      if (!(/^[a-z0-9]*$/.test(customCode))) {
+        errors.push("کاراکتر های کد نهایی باید حروف کوچک و اعداد باشند.");
+      }
+    }
     // این یک میدل ور برای اعتبار سنجی لینک ورودی است
     if (!validateUrl(inputV).isValid) {
-      return NextResponse.json(
-        { message: [validateUrl(inputV).error, "inputV"] },
-        { status: 400 }
-      );
+      errors.push(validateUrl(inputV).error || "آدرس مشکل دارد");
     }
-
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
     if (linksTable.all().find(link => link.mainUrl === inputV)) {
-      return NextResponse.json(
-        { message: [`این لینک از قبل با کد ${linksTable.all().find(link => link.mainUrl === inputV)?.finalCode} وجود دارد.`, "inputV"] },
-        { status: 400 }
-      );
+      errors.push(`این لینک از قبل با کد ${linksTable.all().find(link => link.mainUrl === inputV)?.finalCode} وجود دارد.`);
+    }
+    // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
+    if (linksTable.all().find(link => link.finalCode === customCode)) {
+      errors.push("کد نهایی از قبل موجود است.");
+    }
+    // اگر کاربر کد نهایی رو خودش داده و مشکلی هم نداشته کد نهایی اون رو میزاریم
+    // وگرنه:
+    // میسازیم کد تصادفی رو که قبلا در پایگاه داده نبوده
+    let newGeneratedCode: string = "";
+    if (customCode.trim().length === 0) {
+      do {
+        newGeneratedCode = Math.random().toString(36).substring(2, 8);
+      } while (linksTable.all().some(link => link.finalCode === newGeneratedCode));
+    } else {
+      newGeneratedCode = customCode;
     }
 
-    // اینجا میسازیم کد تصادفی رو که قبلا در پایگاه داده نبوده
-    let newGeneratedCode: string = "";
-    do {
-      newGeneratedCode = Math.random().toString(36).substring(2, 8);
-    } while (linksTable.all().some(link => link.finalCode === newGeneratedCode));
+    // بعد از تشخیص همه ارور ها اگر اروری بود همه را برمیگردانیم
+    if (errors.length > 0) {
+      return NextResponse.json(
+        {message: errors},
+        {status: 400}
+      );
+    }
 
     // ساخت و اضافه کردن لینک جدید
     const newUser: Link = {
@@ -52,9 +73,11 @@ export async function POST(request: NextRequest) {
     };
     linksTable.insert(newUser);
 
-    return NextResponse.json({
-      "code": newGeneratedCode
-    }, { status: 201 });
+    if (errors.length === 0) {
+      return NextResponse.json({
+        "code": newGeneratedCode
+      }, { status: 201 });
+    }
   } catch (error) {
     return NextResponse.json(
       { error: error },
@@ -70,8 +93,8 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    console.log(searchParams ,id);
-    
+    console.log(searchParams, id);
+
     if (!id) {
       return NextResponse.json(
         { error: 'شناسه ثبت نشده است.' },
