@@ -7,7 +7,7 @@ interface LinkItem {
   mainUrl: string;
   finalCode: string;
   createdAt: number;
-  expiresAt?: number;
+  expiresAt: number;
 }
 
 async function Home() {

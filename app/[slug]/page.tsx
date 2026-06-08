@@ -10,7 +10,7 @@ interface LinkItem {
   mainUrl: string;
   finalCode: string;
   createdAt: number;
-  expiresAt?: number;
+  expiresAt: number;
 }
 
 async function fetchLinks() {
@@ -36,8 +36,17 @@ export default async function Page({ params }: { params: { slug: string } }) {
     console.log(finalLink);
 
     if (finalLink){
-        redirect(finalLink.mainUrl);
+        if (finalLink.expiresAt === -1){
+            redirect(finalLink.mainUrl);
+        } else{
+            if (finalLink.expiresAt - Date.now() > 0 ){
+                redirect(finalLink.mainUrl);
+            }
+            else{
+                return <div>لینک منقضی شده است</div>
+            }
+        }
     } else {
-        return <div>لینک نامعتبر</div>
+        return <div>لینک وجود ندارد</div>
     }
 }

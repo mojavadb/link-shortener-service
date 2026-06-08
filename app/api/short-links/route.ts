@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { inputV, customCode }: { inputV: string, customCode: string } = body;
+    const { inputV, customCode, expiredLeft }: { inputV: string, customCode: string, expiredLeft: number } = body;
     const errors: string[] = [];
     // چک کردن فرمت کد نهایی که کاربر داده. باید شش رقمی باشه و همچنین میتونه خالی باشه
     // در ضمن نمیتونه غیر از حروف کوچک و اعداد انگلیسی استفاده کنه
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
       mainUrl: inputV,
       finalCode: newGeneratedCode,
       createdAt: Date.now(),
+      expiresAt: expiredLeft > 0 ? Date.now() + expiredLeft : -1,
     };
     linksTable.insert(newUser);
 

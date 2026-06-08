@@ -5,7 +5,7 @@ interface LinkItem {
   mainUrl: string;
   finalCode: string;
   createdAt: number;
-  expiresAt?: number;
+  expiresAt: number;
 }
 export default async function A(){
     const response = await fetch(`${DOMAIN}/api/short-links`);

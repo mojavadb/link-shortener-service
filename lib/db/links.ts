@@ -7,7 +7,7 @@ export interface Link {
   mainUrl: string;
   finalCode: string;
   createdAt: number;
-  expiresAt?: number;
+  expiresAt: number;
 }
 
 // آدرس ریکورد ها

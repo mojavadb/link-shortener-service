@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import React from "react";
 import { validateUrl } from "@/utils/urlValidator";
 import AdvancedSpinner from "@/components/AdvancedSpinner";
 import ShowResult from "@/components/ShowResult";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const DOMAIN = "http://localhost:3000";
 
@@ -13,10 +14,10 @@ interface LinkItem {
     mainUrl: string;
     finalCode: string;
     createdAt: number;
-    expiresAt?: number;
+    expiresAt: number;
 }
 
-async function createNewLink(url: string, code: string) {
+async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
         const response = await fetch(
             `${DOMAIN}/api/short-links`, {
@@ -26,7 +27,8 @@ async function createNewLink(url: string, code: string) {
             },
             body: JSON.stringify({
                 inputV: url,
-                customCode: code
+                customCode: code,
+                expiredLeft: expiredLeft
             })
         }
         );
@@ -41,11 +43,12 @@ async function createNewLink(url: string, code: string) {
 export default function Main({ data }: { data: LinkItem[] }) {
     // V = Value // L = Link
     const [inputV, setInputV] = React.useState<string>("");
+    const [customCodeV, setCustomCodeV] = React.useState<string>("");
+    const [error, setError] = React.useState<string[]>([]);
 
     const [load, setLoad] = React.useState<boolean>(false);
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
 
-    const [error, setError] = React.useState<string[]>([]);
 
     //   const [existingL, setExistingL] = React.useState<LinkItem[]>([]);
     const [searchL, setSearchL] = React.useState<string>("");
@@ -54,7 +57,6 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [hourV, setHourV] = React.useState<number>(0);
     const [minuteV, setMinuteV] = React.useState<number>(0);
 
-    const [customCodeV, setCustomCodeV] = React.useState<string>("");
 
     const [now, setNow] = React.useState<number>(Date.now());
     const [deletedL, setDeletedL] = React.useState<any>(null);
@@ -64,11 +66,13 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const showedL = data.filter(link =>
         link.mainUrl.toLowerCase().includes(searchL.toLowerCase()) ||
         link.finalCode.toLowerCase().includes(searchL.toLowerCase())
-      );
+    );
+    const router = useRouter();
 
     async function handleSubmit(e: any) {
         e.preventDefault();
-        const res = await createNewLink(inputV, customCodeV);
+        const expiredLeft: number = (dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000;
+        const res = await createNewLink(inputV, customCodeV, expiredLeft);
         if (res.code) {
             setGeneratedCode(res.code);
         }
@@ -78,9 +82,31 @@ export default function Main({ data }: { data: LinkItem[] }) {
         }
     }
 
-    function timeLeft(x: any) {
+    React.useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
 
-    }
+    return () => clearInterval(timer);
+  }, []);
+    const timeLeft = (expiresAt: number) => {
+        if (expiresAt === -1) return "بدون انقضا";
+
+        const remaining = expiresAt - now;
+
+        if (remaining <= 0) return "منقضی";
+
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+
+        if (days > 0) return `${days} روز ${hours} ساعت`;
+        if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
+        if (minutes > 0) return `${minutes} دقیقه`;
+        return "کمتر از 1 دقیقه";
+    };
+
     async function handleDelete(id: string) {
         try {
             const response = await fetch(
@@ -88,7 +114,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                 method: "DELETE",
             });
             const data = await response.json();
-            window.location.reload();
+            router.refresh();
             console.log(data);
         } catch (error) {
             console.error('Error deleting link:', error);
@@ -199,13 +225,12 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                     </div>
                                 </div>
                                 <div>
-                                    {error?.map(err => 
+                                    {error?.map(err =>
                                         <p key={err}
-                                        className="block h-4 w-full text-sm font-semibold text-red-600">
+                                            className="block h-4 w-full text-sm font-semibold text-red-600">
                                             {err}
                                         </p>
                                     )}
-                                    
                                 </div>
                                 <div className="px-8 flex justify-center items-center">
                                     <button
@@ -250,7 +275,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                     <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
                                 <div className="text-xs text-gray-400 mt-1">
-                                    {/*timeLeft(item.expiresAt)*/}
+                                    {timeLeft(item.expiresAt)}
                                 </div>
                                 <button type="button"
                                     disabled={deletedL ? true : false}

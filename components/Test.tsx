@@ -4,7 +4,7 @@ interface LinkItem {
   mainUrl: string;
   finalCode: string;
   createdAt: number;
-  expiresAt?: number;
+  expiresAt: number;
 }
 export default function Test({data} : {data : LinkItem[]}) {
     
