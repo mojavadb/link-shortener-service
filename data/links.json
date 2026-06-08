@@ -1,22 +1,16 @@
 {
   "json": [
     {
-      "id": 1780465150733,
-      "mainUrl": "https://example.com/products/123",
-      "finalCode": "m6st9b",
-      "createdAt": 1780465150733
-    },
-    {
-      "id": 1780472791051,
-      "mainUrl": "https://example.com/products/123888888",
-      "finalCode": "c4zld2",
-      "createdAt": 1780472791051
-    },
-    {
-      "id": 1780768333241,
+      "id": "1780917544455",
       "mainUrl": "https://statics.tamineto.com/intro-task.pdf",
-      "finalCode": "w8bj39",
-      "createdAt": 1780768333241
+      "finalCode": "dv4het",
+      "createdAt": 1780917544455
+    },
+    {
+      "id": "1780917549529",
+      "mainUrl": "https://github.com/mojavadb/link-shortener-service",
+      "finalCode": "ewi7pv",
+      "createdAt": 1780917549529
     }
   ]
 }

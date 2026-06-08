@@ -3,7 +3,7 @@ import path from 'path';
 
 // چون توی api به این نوع داده نیاز داریم export میکنیم
 export interface Link {
-  id: number;
+  id: string;
   mainUrl: string;
   finalCode: string;
   createdAt: number;

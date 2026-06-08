@@ -1,7 +1,7 @@
 import Test from "@/components/Test";
 const DOMAIN = "http://localhost:3000";
 interface LinkItem {
-  id: number;
+  id: string;
   mainUrl: string;
   finalCode: string;
   createdAt: number;

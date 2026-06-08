@@ -1,6 +1,6 @@
 "use client";
 interface LinkItem {
-  id: number;
+  id: string;
   mainUrl: string;
   finalCode: string;
   createdAt: number;

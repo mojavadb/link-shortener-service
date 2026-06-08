@@ -6,7 +6,7 @@ const DOMAIN = "http://localhost:3000";
 import { redirect } from 'next/navigation'
 
 interface LinkItem {
-  id: number;
+  id: string;
   mainUrl: string;
   finalCode: string;
   createdAt: number;
