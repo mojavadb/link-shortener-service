@@ -60,6 +60,11 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
     const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
 
+    const showedL = data.filter(link =>
+        link.mainUrl.toLowerCase().includes(searchL.toLowerCase()) ||
+        link.finalCode.toLowerCase().includes(searchL.toLowerCase())
+      );
+
     async function handleSubmit(e: any) {
         e.preventDefault();
         const res = await createNewLink(inputV);
@@ -231,7 +236,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
 
                     </form>
                     <ul className="w-full">
-                        {data.map(item =>
+                        {showedL.map(item =>
                             <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
                                 <div className="flex flex-col gap-2 text-sm" dir="ltr">
                                     <Link href={`${DOMAIN}/${item.finalCode}`} className="text-sm text-red-800">{DOMAIN.substring(7)}/{item.finalCode}</Link>
