@@ -7,7 +7,9 @@ import ShowResult from "@/components/ShowResult";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const DOMAIN = "http://localhost:3000";
+
+const domain = process.env.NEXT_PUBLIC_DOMAIN;
+console.log(domain);
 
 interface LinkItem {
     id: string;
@@ -20,7 +22,7 @@ interface LinkItem {
 async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
         const response = await fetch(
-            `${DOMAIN}/api/short-links`, {
+            `/api/short-links`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -69,6 +71,14 @@ export default function Main({ data }: { data: LinkItem[] }) {
     );
     const router = useRouter();
 
+    React.useEffect(() => {
+        console.log("MAIN MOUNT");
+
+        return () => {
+            console.log("MAIN UNMOUNT");
+        };
+    }, []);
+
     async function handleSubmit(e: any) {
         e.preventDefault();
         const expiredLeft: number = (dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000;
@@ -83,12 +93,12 @@ export default function Main({ data }: { data: LinkItem[] }) {
     }
 
     React.useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
+        const timer = setInterval(() => {
+            setNow(Date.now());
+        }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+        return () => clearInterval(timer);
+    }, []);
     const timeLeft = (expiresAt: number) => {
         if (expiresAt === -1) return "بدون انقضا";
 
@@ -110,7 +120,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
     async function handleDelete(id: string) {
         try {
             const response = await fetch(
-                `${DOMAIN}/api/short-links?id=${id}`, {
+                `/api/short-links?id=${id}`, {
                 method: "DELETE",
             });
             const data = await response.json();
@@ -131,7 +141,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                 {load ? <AdvancedSpinner size={28} text="لطفا چند لحظه صبر کنید" fullScreen={true} /> :
                     <div>
                         {generatedCode ?
-                            <ShowResult text={`${DOMAIN}/${generatedCode}`} />
+                            <ShowResult text={`${domain}/${generatedCode}`} />
                             :
                             <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
                                 <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
@@ -271,7 +281,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                         {showedL.map(item =>
                             <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
                                 <div className="flex flex-col gap-2 text-sm" dir="ltr">
-                                    <Link href={`${DOMAIN}/${item.finalCode}`} className="text-sm text-red-800">{DOMAIN.substring(7)}/{item.finalCode}</Link>
+                                    <Link href={`/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/{item.finalCode}</Link>
                                     <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
                                 <div className="text-xs text-gray-400 mt-1">

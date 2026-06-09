@@ -1,6 +1,5 @@
 import Main from "@/components/Main";
-
-const DOMAIN = "http://localhost:3000";
+import { linksTable } from "@/lib/db/links";
 
 interface LinkItem {
   id: string;
@@ -10,9 +9,10 @@ interface LinkItem {
   expiresAt: number;
 }
 
-async function Home() {
-  const response = await fetch(`${DOMAIN}/api/short-links`);
-    const data : LinkItem[] = await response.json();
+function Home() {
+  // چون اینجا سرور کامپوننته میتونیم داده رو مستقیما از پایگاه داده بیاریم
+  // نیازی به بک اند نیست
+  const data : LinkItem[] = linksTable.all();
   return(
     <Main data={data} />
   );

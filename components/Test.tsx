@@ -1,4 +1,3 @@
-"use client";
 interface LinkItem {
   id: string;
   mainUrl: string;

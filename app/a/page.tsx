@@ -1,5 +1,5 @@
 import Test from "@/components/Test";
-const DOMAIN = "http://localhost:3000";
+import { linksTable } from "@/lib/db/links";
 interface LinkItem {
   id: string;
   mainUrl: string;
@@ -7,9 +7,8 @@ interface LinkItem {
   createdAt: number;
   expiresAt: number;
 }
-export default async function A(){
-    const response = await fetch(`${DOMAIN}/api/short-links`);
-    const data : LinkItem[] = await response.json();
+export default function A(){
+    const data : LinkItem[] = linksTable.all();
     console.log(data);
     return(
         <div>
