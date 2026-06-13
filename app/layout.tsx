@@ -21,7 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.className}>
-      <body>{children}</body>
+      <body
+      cz-shortcut-listen="true"
+      >{children}</body>
     </html>
   );
 }
