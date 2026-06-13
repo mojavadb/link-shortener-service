@@ -1,12 +1,12 @@
 // CRUD (Create, Read, Update, Delete) => POST, GET, PUT, DELETE
 
 import { NextRequest, NextResponse } from 'next/server';
-import { linksTable, Link } from '@/lib/db/links';
 import { validateUrl } from '@/utils/urlValidator';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const links = linksTable.all();
+    const links = await prisma.linkItem.findMany();
     return NextResponse.json(links);
   } catch (error) {
     return NextResponse.json(
@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { inputV, customCode, expiredLeft }: { inputV: string, customCode: string, expiredLeft: number } = body;
     const errors: string[] = [];
+
     // چک کردن فرمت کد نهایی که کاربر داده. باید شش رقمی باشه و همچنین میتونه خالی باشه
     // در ضمن نمیتونه غیر از حروف کوچک و اعداد انگلیسی استفاده کنه
     if (customCode.length !== 6) {
@@ -32,53 +33,77 @@ export async function POST(request: NextRequest) {
         errors.push("کاراکتر های کد نهایی باید حروف کوچک و اعداد باشند.");
       }
     }
+
     // این یک میدل ور برای اعتبار سنجی لینک ورودی است
     if (!validateUrl(inputV).isValid) {
       errors.push(validateUrl(inputV).error || "آدرس مشکل دارد");
     }
+
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
-    if (linksTable.all().find(link => link.mainUrl === inputV)) {
-      errors.push(`این لینک از قبل با کد ${linksTable.all().find(link => link.mainUrl === inputV)?.finalCode} وجود دارد.`);
+    const existingUrl = await prisma.linkItem.findFirst({
+      where: {
+        mainUrl: inputV
+      }
+    });
+
+    if (existingUrl) {
+      errors.push(`این لینک از قبل با کد ${existingUrl?.finalCode} وجود دارد.`);
     }
+
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
-    if (linksTable.all().find(link => link.finalCode === customCode)) {
+    const existingCode = customCode
+      ? await prisma.linkItem.findFirst({
+          where: {
+            finalCode: customCode
+          }
+        })
+      : null;
+
+    if (existingCode) {
       errors.push("کد نهایی از قبل موجود است.");
     }
+
     // اگر کاربر کد نهایی رو خودش داده و مشکلی هم نداشته کد نهایی اون رو میزاریم
     // وگرنه:
     // میسازیم کد تصادفی رو که قبلا در پایگاه داده نبوده
-    let newGeneratedCode: string = "";
-    if (customCode.trim().length === 0) {
-      do {
-        newGeneratedCode = Math.random().toString(36).substring(2, 8);
-      } while (linksTable.all().some(link => link.finalCode === newGeneratedCode));
-    } else {
-      newGeneratedCode = customCode;
-    }
-
-    // بعد از تشخیص همه ارور ها اگر اروری بود همه را برمیگردانیم
     if (errors.length > 0) {
       return NextResponse.json(
-        {message: errors},
-        {status: 400}
+        { message: errors },
+        { status: 400 }
       );
     }
 
-    // ساخت و اضافه کردن لینک جدید
-    const newUser: Link = {
-      id: Date.now().toString(),
-      mainUrl: inputV,
-      finalCode: newGeneratedCode,
-      createdAt: Date.now(),
-      expiresAt: expiredLeft > 0 ? Date.now() + expiredLeft : -1,
-    };
-    linksTable.insert(newUser);
+    let newGeneratedCode: string;
 
-    if (errors.length === 0) {
-      return NextResponse.json({
-        "code": newGeneratedCode
-      }, { status: 201 });
+    while (true) {
+      newGeneratedCode = customCode?.trim()
+        ? customCode
+        : Math.random().toString(36).substring(2, 8);
+
+      try {
+        const link = await prisma.linkItem.create({
+          data: {
+            mainUrl: inputV,
+            finalCode: newGeneratedCode,
+            expiresAt: expiredLeft > 0
+              ? new Date(Date.now() + expiredLeft)
+              : null,
+          },
+        });
+
+        return NextResponse.json(
+          { code: newGeneratedCode },
+          { status: 201 }
+        );
+
+      } catch (e: any) {
+        if (e.code === "P2002") {
+          continue;
+        }
+        throw e;
+      }
     }
+
   } catch (error) {
     return NextResponse.json(
       { error: error },
@@ -103,7 +128,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    linksTable.delete(id);
+    // linksTable.delete(id);
 
     return NextResponse.json(
       { message: 'لینک حذف شد' },

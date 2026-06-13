@@ -6,18 +6,12 @@ import AdvancedSpinner from "@/components/AdvancedSpinner";
 import ShowResult from "@/components/ShowResult";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { LinkItem } from "@/app/generated/prisma/client";
 
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN;
 console.log(domain);
 
-interface LinkItem {
-    id: string;
-    mainUrl: string;
-    finalCode: string;
-    createdAt: number;
-    expiresAt: number;
-}
 
 async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
@@ -99,25 +93,25 @@ export default function Main({ data }: { data: LinkItem[] }) {
 
         return () => clearInterval(timer);
     }, []);
-    const timeLeft = (expiresAt: number) => {
-        if (expiresAt === -1) return "بدون انقضا";
+    const timeLeft = (expiresAt: Date) => {
+        // if (expiresAt === -1) return "بدون انقضا";
 
-        const remaining = expiresAt - now;
+        // const remaining = expiresAt - now;
 
-        if (remaining <= 0) return "منقضی";
+        // if (remaining <= 0) return "منقضی";
 
-        const days = Math.floor(remaining / 86400000);
-        const hours = Math.floor((remaining % 86400000) / 3600000);
-        const minutes = Math.floor((remaining % 3600000) / 60000);
-        const seconds = Math.floor((remaining % 60000) / 1000);
+        // const days = Math.floor(remaining / 86400000);
+        // const hours = Math.floor((remaining % 86400000) / 3600000);
+        // const minutes = Math.floor((remaining % 3600000) / 60000);
+        // const seconds = Math.floor((remaining % 60000) / 1000);
 
-        if (days > 0) return `${days} روز ${hours} ساعت`;
-        if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
-        if (minutes > 0) return `${minutes} دقیقه`;
-        return "کمتر از 1 دقیقه";
+        // if (days > 0) return `${days} روز ${hours} ساعت`;
+        // if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
+        // if (minutes > 0) return `${minutes} دقیقه`;
+        // return "کمتر از 1 دقیقه";
     };
 
-    async function handleDelete(id: string) {
+    async function handleDelete(id: number) {
         try {
             const response = await fetch(
                 `/api/short-links?id=${id}`, {
@@ -285,7 +279,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                     <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
                                 <div className="text-xs text-gray-400 mt-1">
-                                    {timeLeft(item.expiresAt)}
+                                    {/* {timeLeft(item.expiresAt)} */}
                                 </div>
                                 <button type="button"
                                     disabled={deletedL ? true : false}
