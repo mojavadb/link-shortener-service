@@ -128,7 +128,12 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // linksTable.delete(id);
+    const deleteLink = await prisma.linkItem.delete({
+      where: {
+        id: Number(id)
+      }
+    });
+    console.log(deleteLink);
 
     return NextResponse.json(
       { message: 'لینک حذف شد' },

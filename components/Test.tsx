@@ -1,10 +1,5 @@
-interface LinkItem {
-  id: string;
-  mainUrl: string;
-  finalCode: string;
-  createdAt: number;
-  expiresAt: number;
-}
+import { LinkItem } from "@/app/generated/prisma/client";
+
 export default function Test({data} : {data : LinkItem[]}) {
     
     return <div>

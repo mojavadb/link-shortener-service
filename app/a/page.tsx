@@ -1,14 +1,8 @@
 import Test from "@/components/Test";
-import { linksTable } from "@/lib/db/links";
-interface LinkItem {
-  id: string;
-  mainUrl: string;
-  finalCode: string;
-  createdAt: number;
-  expiresAt: number;
-}
-export default function A(){
-    const data : LinkItem[] = linksTable.all();
+import { LinkItem } from "../generated/prisma/client";
+import prisma from "@/lib/prisma";
+export default async function A(){
+    const data : LinkItem[] = await prisma.linkItem.findMany();
     console.log(data);
     return(
         <div>
