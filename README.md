@@ -52,17 +52,15 @@ pnpm install (recom)
 docker compose up -d
 
 4. **ایجاد فایل های کلید**
-```bash
+
 در root پروژه دو فایل متغیر محیطی ایجاد کنید.
-```
-```bash
+###
 داخل .env کلید مربوط به دیتابیس قرار دهید، مثال:
 DATABASE_URL="postgresql://user:password@localhost:5432/link_shortener"
-```
-```bash
+###
 داخل .env.local دامنه را مشخص کنید، مثال:
 NEXT_PUBLIC_DOMAIN=http://localhost:3000
-```
+
 5. **اعمال Migrationهای پایگاه داده**
 
 pnpm dlx prisma migrate dev
