@@ -171,8 +171,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
         setDeletedL(null);
         setDeletedAt(null);
     }
-
-
+    
     return (
         <div className="md:flex md:items-start md:justify-center md:gap-18 min-h-screen bg-gray-100 p-2">
             {
