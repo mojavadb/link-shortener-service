@@ -45,29 +45,35 @@ cd link-shortener-service
 
 2. **نصب وابستگی ها**
 
-npm install
-#### or
-yarn install
-#### or
 pnpm install (recom)
 
-3. **به وجود آوردن کانتینر داکر برای اجرای پایگاه داده**
+3. **اجرای پایگاه داده PostgreSQL با Docker**
 
 docker compose up -d
 
-3. **اجرای پروژه در سیستم لوکال**
+4. **ایجاد فایل های کلید**
 
-npm run dev
-#### or
-yarn dev
-#### or
+در root پروژه دو فایل متغیر محیطی ایجاد کنید.
+
+داخل .env کلید مربوط به دیتابیس قرار دهید، مثال:
+DATABASE_URL="postgresql://user:password@localhost:5432/link_shortener"
+داخل .env.local دامنه را مشخص کنید، مثال:
+NEXT_PUBLIC_DOMAIN=http://localhost:3000
+
+5. **اعمال Migrationهای پایگاه داده**
+
+pnpm dlx prisma migrate dev
+pnpm dlx prisma generate
+
+6. **اجرای پروژه در سیستم لوکال**
+
 pnpm dev (recom)
 
-4. **باز کردن در مرورگر**
+7. **باز کردن در مرورگر**
 
 http://localhost:3000/
 
-5. **نکات**
+8. **نکات**
 
 فونت‌ها از Google Fonts لود می‌شوند و در صورت نبود اینترنت، فقط ظاهر تحت تأثیر قرار می‌گیرد.
 
