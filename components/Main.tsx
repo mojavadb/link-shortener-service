@@ -1,7 +1,6 @@
 'use client';
 
 import React from "react";
-import { validateUrl } from "@/utils/urlValidator";
 import AdvancedSpinner from "@/components/AdvancedSpinner";
 import ShowResult from "@/components/ShowResult";
 import Link from "next/link";
@@ -45,17 +44,15 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [load, setLoad] = React.useState<boolean>(false);
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
 
-
-    //   const [existingL, setExistingL] = React.useState<LinkItem[]>([]);
     const [searchL, setSearchL] = React.useState<string>("");
-    //   const [filterL, setFilterL] = React.useState<LinkItem[]>([]);
+
     const [dayV, setDayV] = React.useState<number>(0);
     const [hourV, setHourV] = React.useState<number>(0);
     const [minuteV, setMinuteV] = React.useState<number>(0);
 
-
     const [now, setNow] = React.useState<number>(Date.now());
-    const [deletedL, setDeletedL] = React.useState<any>(null);
+
+    const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
     const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
     const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
 
@@ -66,17 +63,78 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const router = useRouter();
 
     React.useEffect(() => {
-        console.log("MAIN MOUNT");
+        const timer = setInterval(() => {
+            setNow(Date.now());
+        }, 1000);
 
-        return () => {
-            console.log("MAIN UNMOUNT");
-        };
+        return () => clearInterval(timer);
     }, []);
+
+    const checkExpired = React.useCallback(async () => {
+        const now = Date.now();
+
+        const expiredLinks = data.filter(link => {
+            if (!link.expiresAt) return false;
+            return new Date(link.expiresAt).getTime() <= now;
+        });
+
+        if (expiredLinks.length === 0) return;
+
+        try {
+            await Promise.all(
+                expiredLinks.map(link =>
+                    fetch(`/api/short-links?id=${link.id}`, {
+                        method: "DELETE",
+                    })
+                )
+            );
+
+            router.refresh();
+        } catch (err) {
+            console.error("Auto delete failed:", err);
+        }
+    }, [data, router]);
+    React.useEffect(() => {
+        checkExpired();
+
+        const interval = setInterval(checkExpired, 1000);
+
+        return () => clearInterval(interval);
+    }, [checkExpired]);
+
+    function timeLeft(expiresAt: Date | null) {
+        if (!expiresAt) return "بدون انقضا";
+
+        const remaining = new Date(expiresAt).getTime() - now;
+
+        if (remaining <= 0) {
+            return "منقضی شده";
+        };
+
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+
+        const parts = [];
+
+        if (days > 0) parts.push(`${days} روز`);
+        if (hours > 0) parts.push(`${hours} ساعت`);
+        if (minutes > 0) parts.push(`${minutes} دقیقه`);
+
+        if (days === 0 && hours === 0 && minutes === 0 && seconds > 0){
+            return "چند لحظه دیگر منقضی میشود"
+        }
+
+        return `${parts.join(" و ")} دیگر منقضی میشود`;
+    }
 
     async function handleSubmit(e: any) {
         e.preventDefault();
+        setLoad(true);
         const expiredLeft: number = (dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000;
         const res = await createNewLink(inputV, customCodeV, expiredLeft);
+        setLoad(false)
         if (res.code) {
             setGeneratedCode(res.code);
         }
@@ -86,46 +144,32 @@ export default function Main({ data }: { data: LinkItem[] }) {
         }
     }
 
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setNow(Date.now());
-        }, 1000);
+    async function handleDelete(e: any, id: number) {
+        e.preventDefault();
+        const item = data.find(l => l.id === id);
+        if (!item) return;
 
-        return () => clearInterval(timer);
-    }, []);
-    const timeLeft = (expiresAt: Date) => {
-        // if (expiresAt === -1) return "بدون انقضا";
+        setDeletedL(item);
+        setDeletedAt(Date.now());
 
-        // const remaining = expiresAt - now;
-
-        // if (remaining <= 0) return "منقضی";
-
-        // const days = Math.floor(remaining / 86400000);
-        // const hours = Math.floor((remaining % 86400000) / 3600000);
-        // const minutes = Math.floor((remaining % 3600000) / 60000);
-        // const seconds = Math.floor((remaining % 60000) / 1000);
-
-        // if (days > 0) return `${days} روز ${hours} ساعت`;
-        // if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
-        // if (minutes > 0) return `${minutes} دقیقه`;
-        // return "کمتر از 1 دقیقه";
-    };
-
-    async function handleDelete(id: number) {
-        try {
-            const response = await fetch(
-                `/api/short-links?id=${id}`, {
+        const timeout = setTimeout(async () => {
+            await fetch(`/api/short-links?id=${id}`, {
                 method: "DELETE",
             });
-            const data = await response.json();
             router.refresh();
-            console.log(data);
-        } catch (error) {
-            console.error('Error deleting link:', error);
-        }
-    }
-    function undoDelete() {
+            setDeletedL(null);
+        }, 5000);
 
+        setUndoTimeout(timeout);
+    }
+    async function handleUndoDelete(e: any) {
+        e.preventDefault();
+        if (!deletedL) return;
+
+        if (undoTimeout) clearTimeout(undoTimeout);
+
+        setDeletedL(null);
+        setDeletedAt(null);
     }
 
 
@@ -279,12 +323,12 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                     <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
                                 <div className="text-xs text-gray-400 mt-1">
-                                    {/* {timeLeft(item.expiresAt)} */}
+                                    {timeLeft(item.expiresAt)}
                                 </div>
                                 <button type="button"
                                     disabled={deletedL ? true : false}
                                     className="px-2 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
-                                    onClick={() => handleDelete(item.id)}
+                                    onClick={(e) => handleDelete(e, item.id)}
                                 >حذف</button>
                             </li>
                         )}
@@ -296,9 +340,9 @@ export default function Main({ data }: { data: LinkItem[] }) {
                         return (
                             <button type="button"
                                 className="px-2 h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
-                                onClick={() => undoDelete()}
+                                onClick={(e) => handleUndoDelete(e)}
                             >
-                                بازگردانی ({remaining})
+                                لغو ({remaining})
                             </button>
                         );
                     })()}
