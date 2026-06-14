@@ -320,7 +320,8 @@ export default function Main({ data }: { data: LinkItem[] }) {
                             <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
                                 <div className="flex flex-col gap-2 text-sm" dir="ltr">
                                     <Link href={`/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/{item.finalCode}</Link>
-                                    <a href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
+                                    <a target="_blank"
+                                    rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
                                 <div className="text-xs text-gray-400 mt-1">
                                     {timeLeft(item.expiresAt)}
