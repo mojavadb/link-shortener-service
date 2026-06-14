@@ -323,8 +323,9 @@ export default function Main({ data }: { data: LinkItem[] }) {
                                     <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
-                                <div className="text-xs text-gray-400 mt-1">
-                                    {timeLeft(item.expiresAt)}
+                                <div className="flex flex-col gap-2 text-sm">
+                                    <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
+                                    <span className="text-xs text-gray-400">{`تعداد بازدید: ${item.clicks}`}</span>
                                 </div>
                                 <button type="button"
                                     disabled={deletedL ? true : false}
