@@ -158,7 +158,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
             });
             router.refresh();
             setDeletedL(null);
-        }, 5000);
+        }, 3000);
 
         setUndoTimeout(timeout);
     }
@@ -179,7 +179,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                 {load ? <AdvancedSpinner size={28} text="لطفا چند لحظه صبر کنید" fullScreen={true} /> :
                     <div>
                         {generatedCode ?
-                            <ShowResult text={`${domain}/${generatedCode}`} />
+                            <ShowResult text={`${domain}/s/${generatedCode}`} />
                             :
                             <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
                                 <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
@@ -319,7 +319,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                         {showedL.map(item =>
                             <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
                                 <div className="flex flex-col gap-2 text-sm" dir="ltr">
-                                    <Link href={`/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/{item.finalCode}</Link>
+                                    <Link href={`/s/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/s/{item.finalCode}</Link>
                                     <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 </div>
@@ -336,7 +336,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                     </ul>
                     {deletedL && (() => {
                         const elapsed = now - (deletedAt || 0);
-                        const remaining = Math.floor(5.49 - (elapsed / 1000));
+                        const remaining = Math.floor(3.49 - (elapsed / 1000));
 
                         return (
                             <button type="button"
