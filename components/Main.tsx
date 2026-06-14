@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
 
 
-const domain = process.env.NEXT_PUBLIC_DOMAIN;
+const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 console.log(domain);
 
 
