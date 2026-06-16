@@ -7,6 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  phoneNum  String?  @unique
+  password  String?
+  name      String?
+  googleId  String?  @unique
+  createdAt DateTime @default(now())
+
+  links LinkItem[]
+}
+
 model LinkItem {
   id        Int       @id @default(autoincrement())
   finalCode String    @unique
@@ -14,4 +25,32 @@ model LinkItem {
   createdAt DateTime  @default(now())
   expiresAt DateTime?
   clicks    Int       @default(0)
+
+  creatorId Int?
+  creator   User?     @relation(fields: [creatorId], references: [id])
 }
+
+/**
+ * model User {
+ * id        Int       @id @default(autoincrement())
+ * username  String    @unique
+ * password  String?
+ * googleId  String?   @unique
+ * createdAt DateTime  @default(now())
+ * // later:
+ * phoneNum  String?
+ * OTPCode   number?
+ * OTPExpire DateTime?
+ * }
+ * sign in / log in => 2 ways (google, password)
+ * if (google)   name = domain of gmail ex: m.j.babaee98@gmail.com - name: m.j.babaee98
+ * user can change the name manually in setting
+ * if (password) name = a random name give to user
+ * user can change the name manually in setting
+ * add submit to phone number later
+ * totaly name automically created and update by user later, password must created by user
+ * if (log in)  in app/page.tsx: logout btn, go to app btn
+ * if (!log in) in app/page.tsx: login btn, signin btn
+ * // later
+ * user can create new account or user can switch between accounts
+ */
