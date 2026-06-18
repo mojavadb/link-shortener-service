@@ -26,12 +26,13 @@ async function createNewLink(url: string, code: string, expiredLeft: number) {
     }
 }
 
-export default function LinkMaker({ data, setLoad, setGeneratedCode }: { data: LinkItem[], setGeneratedCode: any, setLoad: any }) {
+export default function LinkMaker(
+    { data, setLoad, setGeneratedCode, errors, setErrors } :
+    { data: LinkItem[], setGeneratedCode: any, setLoad: any, errors: string[], setErrors: any }
+) {
     // V = Value // L = Link
     const [inputV, setInputV] = React.useState<string>("");
     const [customCodeV, setCustomCodeV] = React.useState<string>("");
-    const [error, setError] = React.useState<string[]>([]);
-
 
     const [dayV, setDayV] = React.useState<number>(0);
     const [hourV, setHourV] = React.useState<number>(0);
@@ -77,14 +78,14 @@ export default function LinkMaker({ data, setLoad, setGeneratedCode }: { data: L
         setLoad(true);
         const expiredLeft: number = (dayV * 24 * 60 * 60 + hourV * 60 * 60 + minuteV * 60) * 1000;
         const res = await createNewLink(inputV, customCodeV, expiredLeft);
-        setLoad(false)
         if (res.code) {
             setGeneratedCode(res.code);
         }
         if (res.message) {
-            setError(res.message);
+            setErrors(res.message);
             console.log(res.message);
         }
+        setLoad(false)
     }
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
@@ -178,14 +179,6 @@ export default function LinkMaker({ data, setLoad, setGeneratedCode }: { data: L
 
                 </div>
             </div>
-            <div>
-                {error?.map(err =>
-                    <p key={err}
-                        className="block h-4 w-full text-sm font-semibold text-red-600">
-                        {err}
-                    </p>
-                )}
-            </div>
             <div className="px-8 flex justify-center items-center">
                 <button
                     type="submit"
@@ -193,6 +186,14 @@ export default function LinkMaker({ data, setLoad, setGeneratedCode }: { data: L
                 >
                     ساخت لینک کوتاه
                 </button>
+            </div>
+            <div className="text-center">
+                {errors?.map(err =>
+                    <p key={err}
+                        className="block h-4 w-full text-sm font-semibold text-red-600">
+                        {err} 
+                    </p>
+                )}
             </div>
         </form>
     );

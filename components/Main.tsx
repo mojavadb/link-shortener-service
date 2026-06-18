@@ -13,21 +13,22 @@ console.log(domain);
 export default function Main({ data }: { data: LinkItem[] }) {
     const [load, setLoad] = React.useState<boolean>(false);
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
+    const [errors, setErrors] = React.useState<string[]>([]);
+    
+    if (load === true) return <AdvancedSpinner text="بارگزاری" />;
     return (
         <div className="md:flex md:items-start md:justify-center md:gap-18 min-h-screen bg-gray-100 p-2">
-            {
-                load ? <AdvancedSpinner text="صبر کنید" /> :
-                    <div>
-                        {generatedCode ?
-                            <ShowResult text={`${domain}/s/${generatedCode}`} />
-                            :
-                            <>
-                                <LinkMaker data={data} setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
-                                <CreatedListLinks data={data} />
-                            </>
-                        }
-                    </div>
-            }
+            <div>
+                {generatedCode ?
+                    <ShowResult text={`${domain}/s/${generatedCode}`} />
+                    :
+                    <>
+                        <LinkMaker errors={errors} setErrors={setErrors}
+                        data={data} setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
+                        <CreatedListLinks data={data} />
+                    </>
+                }
+            </div>
         </div>
     );
 }
