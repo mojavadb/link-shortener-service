@@ -16,16 +16,18 @@ async function Home() {
   const session = await auth();
   // if (!session?.user) redirect("/auth");
   return (
-    // <div>
-    //   <p>{session?.user?.email}</p>
-    //   <button onClick={async () => {
-    //     "use server"
-    //     await signOut()
-    //   }}>
-    //     sign out
-    //   </button>
-    // </div>
-    <Main data={links} />
+    <>
+      <div>
+        <p>{session?.user?.email}</p>
+        <button onClick={async () => {
+          "use server"
+          await signOut()
+        }}>
+          sign out
+        </button>
+      </div>
+      <Main data={links} />
+    </>
   );
 }
 
