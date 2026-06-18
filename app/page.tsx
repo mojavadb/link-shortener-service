@@ -13,21 +13,9 @@ async function Home() {
   const sessions: Session[] = await prisma.session.findMany();
   console.log(links.length, users.length, accounts.length, sessions.length);
   console.log(sessions);
-  const session = await auth();
   // if (!session?.user) redirect("/auth");
   return (
-    <>
-      <div>
-        <p>{session?.user?.email}</p>
-        <button onClick={async () => {
-          "use server"
-          await signOut()
-        }}>
-          sign out
-        </button>
-      </div>
       <Main data={links} />
-    </>
   );
 }
 

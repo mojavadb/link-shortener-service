@@ -16,7 +16,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
     
     if (load === true) return <AdvancedSpinner text="بارگزاری" />;
     return (
-        <div className="md:flex md:items-start md:justify-center md:gap-18 min-h-screen bg-gray-100 p-2">
+        <div className="md:flex md:items-start md:justify-center p-6">
             <div>
                 {generatedCode ?
                     <ShowResult text={`${domain}/s/${generatedCode}`} />

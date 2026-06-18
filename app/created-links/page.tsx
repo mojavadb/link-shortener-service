@@ -14,6 +14,8 @@ export default async function CreatedLinks() {
     });
     console.log(links);
     return (
-        <CreatedListLinks data={links} />
+        <div className="md:flex md:items-start md:justify-center p-6">
+            <CreatedListLinks data={links} />
+        </div>
     );
 }
