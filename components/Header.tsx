@@ -3,16 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"
+import AdvancedSpinner from "./AdvancedSpinner";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+
+    if (status === "loading") {
+        return <div></div>;
+    }
 
     return (
         <header className="bg-white">
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
-                <Link href="/" className="text-md font-bold" 
-                onClick={() => setIsOpen(false)}>
+                <Link href="/" className="text-md font-bold"
+                    onClick={() => setIsOpen(false)}>
                     LinkSortener
                 </Link>
 
