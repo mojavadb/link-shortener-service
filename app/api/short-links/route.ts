@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const existingUrl = await prisma.linkItem.findFirst({
       where: {
         mainUrl: inputV,
-        creatorId: session?.user?.id
+        creatorId: session?.user?.id || ""
       }
     });
 
