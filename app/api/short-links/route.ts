@@ -41,17 +41,8 @@ export async function POST(request: NextRequest) {
       errors.push(validateUrl(inputV).error || "آدرس مشکل دارد");
     }
 
-    // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
-    const existingUrl = await prisma.linkItem.findFirst({
-      where: {
-        mainUrl: inputV,
-        creatorId: session?.user?.id || ""
-      }
-    });
-
-    if (existingUrl) {
-      errors.push(`شما قبلا این لینک را ساخته اید با کد ${existingUrl?.finalCode}`);
-    }
+    // هر کاربر هر چند تا لینک که میخواهد میسازد چیزی که باید
+    // منحصر به فرد باشد کد نهایی است
 
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
     const existingCode = customCode
