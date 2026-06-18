@@ -7,10 +7,8 @@ import AdvancedSpinner from "@/components/AdvancedSpinner";
 import ShowResult from "@/components/ShowResult";
 import CreatedListLinks from "@/components/CreatedListLinks";
 
-
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 console.log(domain);
-
 
 async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
@@ -32,7 +30,6 @@ async function createNewLink(url: string, code: string, expiredLeft: number) {
     } catch (error) {
         return error;
     }
-
 }
 
 export default function Main({ data }: { data: LinkItem[] }) {
@@ -44,16 +41,11 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [load, setLoad] = React.useState<boolean>(false);
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
 
-
     const [dayV, setDayV] = React.useState<number>(0);
     const [hourV, setHourV] = React.useState<number>(0);
     const [minuteV, setMinuteV] = React.useState<number>(0);
-
-
     
     const router = useRouter();
-
-    
 
     const checkExpired = React.useCallback(async () => {
         const now = Date.now();
@@ -79,6 +71,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
             console.error("Auto delete failed:", err);
         }
     }, [data, router]);
+    
     React.useEffect(() => {
         checkExpired();
 
