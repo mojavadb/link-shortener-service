@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateUrl } from '@/utils/urlValidator';
 import prisma from '@/lib/prisma';
+import { auth } from '@/auth';
 
 export async function GET() {
   try {
@@ -18,6 +19,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
     const body = await request.json();
     const { inputV, customCode, expiredLeft }: { inputV: string, customCode: string, expiredLeft: number } = body;
     const errors: string[] = [];
@@ -88,6 +90,7 @@ export async function POST(request: NextRequest) {
             expiresAt: expiredLeft > 0
               ? new Date(Date.now() + expiredLeft)
               : null,
+            creatorId: session?.user?.id
           },
         });
 
