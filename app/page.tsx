@@ -1,32 +1,41 @@
 import Main from "@/components/Main";
 import prisma from "@/lib/prisma";
 import { Account, LinkItem, User, Session } from "./generated/prisma/client";
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 
 async function Home() {
   // چون اینجا سرور کامپوننته میتونیم داده رو مستقیما از پایگاه داده بیاریم
   // نیازی به بک اند نیست
-  const links : LinkItem[] = await prisma.linkItem.findMany();
-  const users : User[] = await prisma.user.findMany();
-  const accounts : Account[] = await prisma.account.findMany();
-  const sessions : Session[] = await prisma.session.findMany();
+  const links: LinkItem[] = await prisma.linkItem.findMany();
+  const users: User[] = await prisma.user.findMany();
+  const accounts: Account[] = await prisma.account.findMany();
+  const sessions: Session[] = await prisma.session.findMany();
   console.log(links.length, users.length, accounts.length, sessions.length);
   console.log(sessions);
-  return(
-  <div>
-    <button onClick={async() => {
-      "use server"
-      await signIn()
-    }}>
-      sign in
-    </button>
-    <button onClick={async() => {
-      "use server"
-      await signOut()
-    }}>
-      sign out
-    </button>
-  </div>
+  const session = await auth();
+  if (!session?.user) {
+    return (
+      <div>
+        <p>pls login</p>
+        <button onClick={async () => {
+          "use server"
+          await signIn()
+        }}>
+          sign in
+        </button>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <p>{session?.user?.email}</p>
+      <button onClick={async () => {
+        "use server"
+        await signOut()
+      }}>
+        sign out
+      </button>
+    </div>
     // <Main data={links} />
   );
 }
