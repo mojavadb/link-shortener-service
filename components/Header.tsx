@@ -23,7 +23,7 @@ export default function Header() {
                                 className="hover:text-blue-600">
                                 لیست لینک ها
                             </Link>
-                            <Link href={"/created-links"}
+                            <Link href={"/user-account"}
                                 className="hover:text-blue-600">
                                 حساب کاربری
                             </Link>
@@ -80,7 +80,7 @@ export default function Header() {
                                     className="hover:text-blue-600">
                                     لیست لینک ها
                                 </Link>
-                                <Link href={"/created-links"} onClick={() => setIsOpen(false)}
+                                <Link href={"/user-account"} onClick={() => setIsOpen(false)}
                                     className="hover:text-blue-600">
                                     حساب کاربری
                                 </Link>
