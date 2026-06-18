@@ -44,12 +44,13 @@ export async function POST(request: NextRequest) {
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
     const existingUrl = await prisma.linkItem.findFirst({
       where: {
-        mainUrl: inputV
+        mainUrl: inputV,
+        creatorId: session?.user?.id
       }
     });
 
     if (existingUrl) {
-      errors.push(`این لینک از قبل با کد ${existingUrl?.finalCode} وجود دارد.`);
+      errors.push(`شما قبلا این لینک را ساخته اید با کد ${existingUrl?.finalCode}`);
     }
 
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
