@@ -2,6 +2,7 @@ import Main from "@/components/Main";
 import prisma from "@/lib/prisma";
 import { Account, LinkItem, User, Session } from "./generated/prisma/client";
 import { auth, signIn, signOut } from "@/auth";
+import { redirect } from "next/navigation";
 
 async function Home() {
   // چون اینجا سرور کامپوننته میتونیم داده رو مستقیما از پایگاه داده بیاریم
@@ -13,30 +14,18 @@ async function Home() {
   console.log(links.length, users.length, accounts.length, sessions.length);
   console.log(sessions);
   const session = await auth();
-  if (!session?.user) {
-    return (
-      <div>
-        <p>pls login</p>
-        <button onClick={async () => {
-          "use server"
-          await signIn()
-        }}>
-          sign in
-        </button>
-      </div>
-    );
-  }
+  // if (!session?.user) redirect("/auth");
   return (
-    <div>
-      <p>{session?.user?.email}</p>
-      <button onClick={async () => {
-        "use server"
-        await signOut()
-      }}>
-        sign out
-      </button>
-    </div>
-    // <Main data={links} />
+    // <div>
+    //   <p>{session?.user?.email}</p>
+    //   <button onClick={async () => {
+    //     "use server"
+    //     await signOut()
+    //   }}>
+    //     sign out
+    //   </button>
+    // </div>
+    <Main data={links} />
   );
 }
 
