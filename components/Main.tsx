@@ -4,7 +4,6 @@ import React from "react";
 import { LinkItem } from "@/app/generated/prisma/client";
 import AdvancedSpinner from "@/components/AdvancedSpinner";
 import ShowResult from "@/components/ShowResult";
-import CreatedListLinks from "@/components/CreatedListLinks";
 import LinkMaker from "./LinkMaker";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
@@ -21,12 +20,9 @@ export default function Main({ data }: { data: LinkItem[] }) {
             <div>
                 {generatedCode ?
                     <ShowResult text={`${domain}/s/${generatedCode}`} />
-                    :
-                    <>
-                        <LinkMaker errors={errors} setErrors={setErrors}
-                        data={data} setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
-                        <CreatedListLinks data={data} />
-                    </>
+                    :        
+                    <LinkMaker errors={errors} setErrors={setErrors}
+                    data={data} setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
                 }
             </div>
         </div>
