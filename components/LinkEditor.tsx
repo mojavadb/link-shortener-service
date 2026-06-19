@@ -4,14 +4,41 @@ import { LinkItem } from "@/app/generated/prisma/client";
 import { CaseLower, Link, ShieldOff } from "lucide-react";
 import React, { useState } from "react";
 
+async function updateLink(url: string, code: string, endexpire: boolean, linkId: number | undefined) {
+    try {
+        const response = await fetch(
+            `/api/short-links`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                inputV: url,
+                customCode: code,
+                endexpire: endexpire,
+                id: linkId
+            })
+        }
+        );
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
+
 export default function LinkEditor({ link }: { link: LinkItem | null }) {
     const [inputV, setInputV] = React.useState<string>(link?.mainUrl || "");
     const [customCodeV, setCustomCodeV] = React.useState<string>(link?.finalCode || "");
     const [hasExpried, setHasExpried] = useState<boolean>(
         link?.expiresAt ? true : false
     );
-    function handleSubmit(e: any) {
-
+    async function handleSubmit(e: any) {
+        e.preventDefault();
+        const res = await updateLink(inputV, customCodeV, hasExpried, link?.id);
+        if (res.message) {
+            console.log(res.message);
+        }
     }
 
     return (

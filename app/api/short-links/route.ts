@@ -113,62 +113,123 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const session = await auth();
+
     if (!session?.user) {
-      NextResponse.redirect("/auth")
+      return NextResponse.json(
+        { message: "ابتدا وارد حساب کاربری شوید." },
+        { status: 401 }
+      );
     }
+
     const body = await request.json();
-    const { inputV, customCode, endexpire, id }: { inputV: string, customCode: string, endexpire: boolean, id: number } = body;
+
+    const {
+      inputV,
+      customCode,
+      endexpire,
+      id,
+    }: {
+      inputV: string;
+      customCode: string;
+      endexpire: boolean;
+      id: number;
+    } = body;
+
     const errors: string[] = [];
 
+    // اعتبارسنجی کد نهایی
     if (customCode.length !== 6) {
-      errors.push("کد نهایی باید شش رقمی باشد");
-    } else {
-      if (!(/^[a-z0-9]*$/.test(customCode))) {
-        errors.push("کاراکتر های کد نهایی باید حروف کوچک و اعداد باشند.");
-      }
+      errors.push("کد نهایی باید 6 کاراکتر باشد.");
     }
-    if (!validateUrl(inputV).isValid) {
-      errors.push(validateUrl(inputV).error || "آدرس مشکل دارد");
-    }
-    const existingCode = customCode
-      ? await prisma.linkItem.findFirst({
-        where: {
-          finalCode: customCode
-        }
-      })
-      : null;
 
-    if (existingCode) {
-      errors.push("کد نهایی از قبل موجود است.");
+    if (!/^[a-z0-9]{6}$/.test(customCode)) {
+      errors.push(
+        "کد نهایی فقط باید شامل حروف کوچک انگلیسی و اعداد باشد."
+      );
     }
+
+    // اعتبارسنجی لینک
+    const urlValidation = validateUrl(inputV);
+
+    if (!urlValidation.isValid) {
+      errors.push(urlValidation.error || "آدرس وارد شده معتبر نیست.");
+    }
+
     if (errors.length > 0) {
       return NextResponse.json(
         { message: errors },
         { status: 400 }
       );
     }
-    const data: any = {
-      mainUrl: inputV,
-      finalCode: customCode,
-    };
 
-    if (endexpire) {
-      data.expiresAt = null;
+    // پیدا کردن لینک
+    const link = await prisma.linkItem.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!link) {
+      return NextResponse.json(
+        { message: "لینک مورد نظر پیدا نشد." },
+        { status: 404 }
+      );
     }
 
-    await prisma.linkItem.update({
-      where: { id },
-      data,
+    // بررسی مالکیت لینک
+    if (link.creatorId !== session.user.id) {
+      return NextResponse.json(
+        { message: "شما اجازه ویرایش این لینک را ندارید." },
+        { status: 403 }
+      );
+    }
+
+    // بررسی تکراری نبودن کد
+    const existingCode = await prisma.linkItem.findFirst({
+      where: {
+        finalCode: customCode,
+        NOT: {
+          id,
+        },
+      },
+    });
+
+    if (existingCode) {
+      return NextResponse.json(
+        {
+          message: ["کد نهایی از قبل استفاده شده است."],
+        },
+        { status: 400 }
+      );
+    }
+
+    const updatedLink = await prisma.linkItem.update({
+      where: {
+        id,
+      },
+      data: {
+        mainUrl: inputV,
+        finalCode: customCode,
+        ...(endexpire && {
+          expiresAt: null,
+        }),
+      },
     });
 
     return NextResponse.json(
-      { code: customCode },
-      { status: 201 }
+      {
+        message: "لینک با موفقیت ویرایش شد.",
+        data: updatedLink,
+      },
+      { status: 200 }
     );
-
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
-      { error: error },
+      {
+        message: "خطایی در سرور رخ داد.",
+      },
       { status: 500 }
     );
   }
