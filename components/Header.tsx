@@ -8,7 +8,6 @@ import UserDropdown from "./UserDropdown";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
-    const [isUserAccountInfoOpen, setIsUserAccountInfoOpen] = React.useState<boolean>(false);
 
     const { data: session, status } = useSession();
 
@@ -27,19 +26,15 @@ export default function Header() {
                 <nav className="hidden md:flex items-center gap-6">
                     {session?.user ?
                         <div className="text-sm flex gap-2 items-center justify-between">
-                            <Link href={"/created-links"} onClick={() => {
-                                    setIsUserAccountInfoOpen(false)
-                                }}
+                            <Link href={"/created-links"} 
                                 className="hover:text-blue-600">
                                 لیست لینک ها
                             </Link>
-                            <Link href={"/"} onClick={() => {
-                                    setIsUserAccountInfoOpen(false)
-                                }}
+                            <Link href={"/"} 
                                 className="hover:text-blue-600">
                                 ساخت لینک جدید
                             </Link>
-                            <UserDropdown isUserAccountInfoOpen={isUserAccountInfoOpen} setIsUserAccountInfoOpen={setIsUserAccountInfoOpen} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                            <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                         </div>
                         :
                         <Link href={"/auth"}
@@ -87,19 +82,17 @@ export default function Header() {
                             <div className="text-sm flex gap-2 items-center justify-between">
                                 <Link href={"/created-links"} onClick={() => {
                                     setIsMenuOpen(false)
-                                    setIsUserAccountInfoOpen(false)
                                 }}
                                     className="hover:text-blue-600">
                                     لیست لینک ها
                                 </Link>
                                 <Link href={"/"} onClick={() => {
                                     setIsMenuOpen(false)
-                                    setIsUserAccountInfoOpen(false)
                                 }}
                                     className="hover:text-blue-600">
                                     ساخت لینک جدید
                                 </Link>
-                                <UserDropdown isUserAccountInfoOpen={isUserAccountInfoOpen} setIsUserAccountInfoOpen={setIsUserAccountInfoOpen} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                                <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                             </div>
                             :
                             <Link href={"/auth"} onClick={() => setIsMenuOpen(false)}

@@ -2,11 +2,13 @@
 import { UserCircle2Icon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { deleteAccount } from "@/actions/deleteUser";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountInfoOpen, setIsUserAccountInfoOpen }
-    : { isMenuOpen: boolean, setIsMenuOpen: any, setIsUserAccountInfoOpen: any, isUserAccountInfoOpen: boolean }
+export default function UserDropdown({ isMenuOpen, setIsMenuOpen }
+    : { isMenuOpen: boolean, setIsMenuOpen: any }
 ) {
+        const [isUserAccountInfoOpen, setIsUserAccountInfoOpen] = React.useState<boolean>(false);
+    
     const { data: session, status } = useSession();
 
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,6 +24,7 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountI
         }
 
         document.addEventListener("mousedown", handleClickOutside);
+        // document.addEventListener("mousedown");
 
         return () => {
             document.removeEventListener(
@@ -35,7 +38,8 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountI
         return <div></div>;
     }
     return (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative"
+        ref={dropdownRef}>
             <button
                 onClick={() =>
                     setIsUserAccountInfoOpen(!isUserAccountInfoOpen)
@@ -46,7 +50,9 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountI
             </button>
 
             {isUserAccountInfoOpen && (
-                <div className="absolute left-0 top-10 z-50 w-72 rounded-xl border bg-white p-4 shadow-lg">
+                <div
+                className="absolute left-0 top-10 z-50 w-72 rounded-xl border bg-white p-4 shadow-lg"
+                >
                     <div className="flex flex-col items-center">
                         <img
                             src={
@@ -63,10 +69,6 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountI
 
                         <p className="text-sm text-gray-500">
                             {session?.user?.email}
-                        </p>
-
-                        <p className="mt-4 text-xs text-gray-400">
-                            تاریخ عضویت: 1405/03/28
                         </p>
                     </div>
 
