@@ -157,7 +157,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 return (
                     <div className="text-center">
                         <button type="button"
-                            className="sticky md:w-64 left-auto right-auto bottom-2 px-2 h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
+                            className="sticky md:w-64 left-auto right-auto bottom-2 px-5 text-sm h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                             onClick={(e) => handleUndoDelete(e)}
                         >
                             لغو ({remaining})
