@@ -109,9 +109,9 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                     placeholder="search"
                 />
             </form>
-            <ul className="w-full lg:grid grid-cols-2 gap-6">
+            <ul className="w-full flex flex-col items-center lg:grid grid-cols-2 lg:gap-10">
                 {showedL.map(item =>
-                    <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 relative">
+                    <li key={item.id} className="border w-full sm:w-96 md:min-w-96 border-gray-200 mb-5 px-3 py-2 relative">
                         <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
                             {item.clicks} <Eye size={12} />
                         </div>
