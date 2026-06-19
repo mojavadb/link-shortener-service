@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"
 import AdvancedSpinner from "./AdvancedSpinner";
+import UserDropdown from "./UserDropdown";
 
 export default function Header() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+    const [isUserAccountInfoOpen, setIsUserAccountInfoOpen] = React.useState<boolean>(false);
+
     const { data: session, status } = useSession();
 
     if (status === "loading") {
@@ -17,25 +20,26 @@ export default function Header() {
         <header className="bg-white">
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
                 <Link href="/" className="text-md font-bold"
-                    onClick={() => setIsOpen(false)}>
+                    onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-6">
                     {session?.user ?
                         <div className="text-sm flex gap-2 items-center justify-between">
-                            <Link href={"/created-links"}
+                            <Link href={"/created-links"} onClick={() => {
+                                    setIsUserAccountInfoOpen(false)
+                                }}
                                 className="hover:text-blue-600">
                                 لیست لینک ها
                             </Link>
-                            <Link href={"/user-account"}
+                            <Link href={"/"} onClick={() => {
+                                    setIsUserAccountInfoOpen(false)
+                                }}
                                 className="hover:text-blue-600">
-                                حساب کاربری
+                                ساخت لینک جدید
                             </Link>
-                            <button onClick={() => signOut()}
-                                className="p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer">
-                                خروج
-                            </button>
+                            <UserDropdown isUserAccountInfoOpen={isUserAccountInfoOpen} setIsUserAccountInfoOpen={setIsUserAccountInfoOpen} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                         </div>
                         :
                         <Link href={"/auth"}
@@ -47,7 +51,7 @@ export default function Header() {
 
                 <button
                     className="md:hidden"
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Toggle Menu"
                 >
                     <svg
@@ -57,7 +61,7 @@ export default function Header() {
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                     >
-                        {isOpen ? (
+                        {isMenuOpen ? (
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -76,29 +80,29 @@ export default function Header() {
                 </button>
             </div>
 
-            {isOpen && (
+            {isMenuOpen && (
                 <nav className="border-t md:hidden">
                     <div className="p-4">
                         {session?.user ?
                             <div className="text-sm flex gap-2 items-center justify-between">
-                                <Link href={"/created-links"} onClick={() => setIsOpen(false)}
+                                <Link href={"/created-links"} onClick={() => {
+                                    setIsMenuOpen(false)
+                                    setIsUserAccountInfoOpen(false)
+                                }}
                                     className="hover:text-blue-600">
                                     لیست لینک ها
                                 </Link>
-                                <Link href={"/user-account"} onClick={() => setIsOpen(false)}
-                                    className="hover:text-blue-600">
-                                    حساب کاربری
-                                </Link>
-                                <button onClick={() => {
-                                    signOut();
-                                    setIsOpen(!isOpen);
+                                <Link href={"/"} onClick={() => {
+                                    setIsMenuOpen(false)
+                                    setIsUserAccountInfoOpen(false)
                                 }}
-                                    className="p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer">
-                                    خروج
-                                </button>
+                                    className="hover:text-blue-600">
+                                    ساخت لینک جدید
+                                </Link>
+                                <UserDropdown isUserAccountInfoOpen={isUserAccountInfoOpen} setIsUserAccountInfoOpen={setIsUserAccountInfoOpen} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                             </div>
                             :
-                            <Link href={"/auth"} onClick={() => setIsOpen(false)}
+                            <Link href={"/auth"} onClick={() => setIsMenuOpen(false)}
                                 className="p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer text-sm">
                                 ورود | ثبت نام
                             </Link>
