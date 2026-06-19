@@ -18,7 +18,7 @@ export default function Header() {
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
                 <Link href="/" className="text-md font-bold"
                     onClick={() => setIsOpen(false)}>
-                    LinkSortener
+                    Link Sortener
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-6">
