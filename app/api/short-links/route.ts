@@ -20,6 +20,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
+    if (!session?.user) {
+      NextResponse.redirect("/auth")
+    }
     const body = await request.json();
     const { inputV, customCode, expiredLeft }: { inputV: string, customCode: string, expiredLeft: number } = body;
     const errors: string[] = [];
@@ -47,10 +50,10 @@ export async function POST(request: NextRequest) {
     // اینجا چک میکنیم که لینک از قبل تو پایگاه داده ثبت نشده باشه
     const existingCode = customCode
       ? await prisma.linkItem.findFirst({
-          where: {
-            finalCode: customCode
-          }
-        })
+        where: {
+          finalCode: customCode
+        }
+      })
       : null;
 
     if (existingCode) {
@@ -107,8 +110,69 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT نداریم طبق تسک هایی که در پی دی اف ارسال شدند
-// زمانی احتیاج میشود که بخواهیم اطلاعات را به روز رسانی کنیم
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      NextResponse.redirect("/auth")
+    }
+    const body = await request.json();
+    const { inputV, customCode, endexpire, id }: { inputV: string, customCode: string, endexpire: boolean, id: number } = body;
+    const errors: string[] = [];
+
+    if (customCode.length !== 6) {
+      errors.push("کد نهایی باید شش رقمی باشد");
+    } else {
+      if (!(/^[a-z0-9]*$/.test(customCode))) {
+        errors.push("کاراکتر های کد نهایی باید حروف کوچک و اعداد باشند.");
+      }
+    }
+    if (!validateUrl(inputV).isValid) {
+      errors.push(validateUrl(inputV).error || "آدرس مشکل دارد");
+    }
+    const existingCode = customCode
+      ? await prisma.linkItem.findFirst({
+        where: {
+          finalCode: customCode
+        }
+      })
+      : null;
+
+    if (existingCode) {
+      errors.push("کد نهایی از قبل موجود است.");
+    }
+    if (errors.length > 0) {
+      return NextResponse.json(
+        { message: errors },
+        { status: 400 }
+      );
+    }
+    const data: any = {
+      mainUrl: inputV,
+      finalCode: customCode,
+    };
+
+    if (endexpire) {
+      data.expiresAt = null;
+    }
+
+    await prisma.linkItem.update({
+      where: { id },
+      data,
+    });
+
+    return NextResponse.json(
+      { code: customCode },
+      { status: 201 }
+    );
+
+  } catch (error) {
+    return NextResponse.json(
+      { error: error },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(request: NextRequest) {
   try {

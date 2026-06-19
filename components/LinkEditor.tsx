@@ -56,16 +56,16 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                 />
             </div>
             <div>
-                {hasExpried &&
+                {link?.expiresAt &&
                     <>
                         <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
                             <ShieldOff size={14} />
                             تاریخ انقضا:
                         </label>
-                        <div className="flex flex-row align-center justify-center gap-1">
+                        <div className="flex text-sm flex-row text-shadow-mauve-50 align-center justify-center gap-1">
                             تاریخ انقضا نداشته باشد:
                             <input type="checkbox" name="hasexpired"
-                                checked={hasExpried} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHasExpried(e.target.checked)} />
+                                checked={!hasExpried} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHasExpried(x => !x)} />
                         </div>
                     </>}
             </div>
