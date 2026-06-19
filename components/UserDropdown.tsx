@@ -77,7 +77,7 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen }
                             setIsMenuOpen(!isMenuOpen);
                             setIsUserAccountInfoOpen(!isUserAccountInfoOpen)
                         }}
-                            className="flex-1 p-2 text-white hover:text-blue-300 rounded-lg transition-all
+                            className="flex-1 p-2 text-white rounded-lg transition-all
                             flex items-center justify-center gap-1 duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer">
                             خروج
                             <ArrowLeft size={16} />
