@@ -23,7 +23,7 @@ export default function Header() {
                     Link Sortener
                 </Link>
 
-                <nav className="hidden md:flex items-center">
+                <nav className="hidden sm:flex items-center">
                     {session?.user ?
                         <div className="text-sm flex gap-6 items-center justify-between">
                             <Link href={"/created-links"} 
@@ -47,14 +47,14 @@ export default function Header() {
                 </nav>
 
                 <button
-                    className="md:hidden"
+                    className="sm:hidden"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Toggle Menu"
                 > {isMenuOpen ? <X size={18} /> : <Menu size={18} />} </button>
             </div>
 
             {isMenuOpen && (
-                <nav className="border-t md:hidden">
+                <nav className="border-t sm:hidden">
                     <div className="p-4">
                         {session?.user ?
                             <div className="text-sm flex gap-2 items-center justify-between">
