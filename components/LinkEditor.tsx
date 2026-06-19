@@ -8,9 +8,9 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
     const [inputV, setInputV] = React.useState<string>(link?.mainUrl || "");
     const [customCodeV, setCustomCodeV] = React.useState<string>(link?.finalCode || "");
     const [hasExpried, setHasExpried] = useState<boolean>(
-        link?.expiresAt ? false : true
+        link?.expiresAt ? true : false
     );
-    function handleSubmit(e : any){
+    function handleSubmit(e: any) {
 
     }
 
@@ -18,8 +18,8 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
             <h2 className="text-center mb-3 text-emerald-600 font-bold text-3xl">ویرایش لینک</h2>
             <div>
-                <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" 
-                htmlFor="address">
+                <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
+                    htmlFor="address">
                     <Link size={14} />
                     آدرس:
                 </label>
@@ -38,9 +38,9 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
             </div>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
-                 htmlFor="finalcode">
+                    htmlFor="finalcode">
                     <CaseLower size={14} />
-                   کد دلخواه:
+                    کد دلخواه:
                 </label>
                 <input
                     type="text"
@@ -56,15 +56,18 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                 />
             </div>
             <div>
-                <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
-                   <ShieldOff size={14} />
-                   تاریخ انقضا:
-                </label>
-                <div className="flex flex-row align-center justify-center gap-1">
-                    تاریخ انقضا نداشته باشد:
-                    <input type="checkbox" name="hasexpired"
-                    checked={hasExpried} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHasExpried(e.target.checked)} />
-                </div>
+                {hasExpried &&
+                    <>
+                        <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
+                            <ShieldOff size={14} />
+                            تاریخ انقضا:
+                        </label>
+                        <div className="flex flex-row align-center justify-center gap-1">
+                            تاریخ انقضا نداشته باشد:
+                            <input type="checkbox" name="hasexpired"
+                                checked={hasExpried} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHasExpried(e.target.checked)} />
+                        </div>
+                    </>}
             </div>
             <div className="px-8 flex justify-center items-center">
                 <button
