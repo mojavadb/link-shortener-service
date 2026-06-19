@@ -127,16 +127,15 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                             </div>
                         </div>
                         <div className="flex align-center justify-between gap-6">
-                            <button type="button"
-                                disabled={deletedL ? true : false}
+                            <Link
                                 className="flex items-center justify-center gap-1 px-2 md:px-3 rounded-xl 
                                 text-white bg-emerald-800 cursor-pointer hover:bg-emerald-700 
                                 transition-all duration-300 text-sm flex-1"
-                                onClick={() => { }}
+                                href={`/created-links/${item.finalCode}`}
                             >
                                 <Edit size={14} />
                                 ویرایش
-                            </button>
+                            </Link>
                             <button type="button"
                                 disabled={deletedL ? true : false}
                                 className="flex items-center justify-start gap-1 px-2 md:px-3 rounded-sm 
