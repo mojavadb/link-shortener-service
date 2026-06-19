@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
-import { CaseLower, MapPin, ShieldOff } from "lucide-react";
+import { CaseLower, Link, ShieldOff } from "lucide-react";
 
 async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
@@ -94,7 +94,7 @@ export default function LinkMaker(
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" 
                 htmlFor="primaryLink">
-                    <MapPin size={14} />
+                    <Link size={14} />
                     آدرس:
                 </label>
                 <input
