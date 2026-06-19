@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react"
 import UserDropdown from "./UserDropdown";
-import { Link2, Menu, Plus, X } from "lucide-react";
+import { Link2, Menu, Plus, Scissors, X } from "lucide-react";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
@@ -18,9 +18,10 @@ export default function Header() {
     return (
         <header className="bg-white">
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
-                <Link href="/" className="text-md font-bold"
+                <Link href="/" className="text-md font-bold flex items-center gap-1 text-red-500"
                     onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
+                    <Scissors size={20} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="red" />
                 </Link>
 
                 <nav className="hidden sm:flex items-center">
@@ -40,7 +41,7 @@ export default function Header() {
                         </div>
                         :
                         <Link href={"/auth"}
-                            className="p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer text-sm">
+                            className="p-2 text-white rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer text-sm">
                             ورود | ثبت نام
                         </Link>
                     }
@@ -76,7 +77,7 @@ export default function Header() {
                             </div>
                             :
                             <Link href={"/auth"} onClick={() => setIsMenuOpen(false)}
-                                className="p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer text-sm">
+                                className="p-2 text-white rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer text-sm">
                                 ورود | ثبت نام
                             </Link>
                         }
