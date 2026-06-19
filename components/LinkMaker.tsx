@@ -93,13 +93,13 @@ export default function LinkMaker(
             <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" 
-                htmlFor="primaryLink">
+                htmlFor="address">
                     <Link size={14} />
                     آدرس:
                 </label>
                 <input
                     type="text"
-                    id="primaryLink"
+                    id="address"
                     value={inputV}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setInputV(e.target.value)
@@ -113,7 +113,7 @@ export default function LinkMaker(
             </div>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
-                 htmlFor="primaryLink">
+                 htmlFor="finalcode">
                     <CaseLower size={14} />
                    کد دلخواه:
                 </label>
@@ -132,7 +132,7 @@ export default function LinkMaker(
                 />
             </div>
             <div>
-                <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="primaryLink">
+                <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="timeremaind">
                    <ShieldOff size={14} />
                    تاریخ انقضا:
                 </label>
