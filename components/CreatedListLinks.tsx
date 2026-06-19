@@ -110,10 +110,13 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 />
             </form>
             <ul className="w-full flex flex-col items-center lg:grid grid-cols-2 lg:gap-10">
-                {showedL.map(item =>
+                {showedL.map((item, index) =>
                     <li key={item.id} className="border w-full sm:w-96 md:min-w-96 border-gray-200 mb-5 px-3 py-2 relative">
                         <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
                             {item.clicks} <Eye size={12} />
+                        </div>
+                        <div className="absolute -top-2 -right-2 p-1 rounded-full h-6 w-6 text-center text-xs bg-white">
+                            {index + 1} -
                         </div>
                         <div className="flex align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col gap-2 text-sm" dir="ltr">
