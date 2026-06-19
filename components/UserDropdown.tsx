@@ -2,20 +2,40 @@
 import { UserCircle2Icon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { deleteAccount } from "@/actions/deleteUser";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export default function UserDropdown({ isMenuOpen, setIsMenuOpen, isUserAccountInfoOpen, setIsUserAccountInfoOpen }
     : { isMenuOpen: boolean, setIsMenuOpen: any, setIsUserAccountInfoOpen: any, isUserAccountInfoOpen: boolean }
 ) {
     const { data: session, status } = useSession();
 
-    const router = useRouter();
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setIsUserAccountInfoOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutside
+            );
+        };
+    }, [setIsUserAccountInfoOpen]);
 
     if (status === "loading") {
         return <div></div>;
     }
     return (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() =>
                     setIsUserAccountInfoOpen(!isUserAccountInfoOpen)
