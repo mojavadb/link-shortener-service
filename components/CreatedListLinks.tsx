@@ -53,10 +53,10 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
         if (minutes > 0) parts.push(`${minutes} دقیقه`);
 
         if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
-            return "چند لحظه دیگر منقضی میشود"
+            return "چند لحظه"
         }
 
-        return `${parts.join(" و ")} دیگر منقضی میشود`;
+        return `${parts.join(" و ")}`;
     }
 
 
@@ -89,11 +89,11 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
     }
 
     return (
-        <div className="px-3 py-2 md:px-9 md:py-6 flex flex-col gap-3 rounded-4 border-gray-200">
+        <div className="relative px-3 py-2 md:px-9 md:py-6 flex flex-col gap-3 rounded-4 border-gray-200">
             <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">لیست لینک های کوتاه شده</h2>
-            <form>
-                <label htmlFor="search" className="block w-full text-sm font-semibold text-yellow-800 mb-2">
-                    بر اساس نام سایت اولیه یا کد نهایی:
+            <form className="flex flex-col items-center justify-center">
+                <label htmlFor="search" className="block w-full sm:w-96 text-sm font-semibold text-red-600 mb-2">
+                    جستجو:
                 </label>
                 <input
                     type="text"
@@ -103,26 +103,26 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         setSearchL(e.target.value)
                     }
                     dir="ltr"
-                    className="p-2 mb-2 w-full text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
+                    className="p-2 mb-2 w-full sm:w-96 text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition-all 
             duration-200 peer"
                     placeholder="search"
                 />
-
             </form>
-            <ul className="w-full">
+            <ul className="w-full lg:grid grid-cols-2 gap-6">
                 {showedL.map(item =>
-                    <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2">
-                        <div className="flex align-center justify-between gap-6 mb-4">
+                    <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 relative">
+                        <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
+                            {item.clicks} <Eye size={12} />
+                        </div>
+                        <div className="flex align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col gap-2 text-sm" dir="ltr">
                                 <Link href={`/s/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/s/{item.finalCode}</Link>
                                 <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                             </div>
                             <div className="flex flex-col gap-2 text-sm">
-                                <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
-                                    {item.clicks} <Eye size={12} />
-                                </div>
+                                <span className="text-xs text-gray-400 text-start">انقضا:</span>
                                 <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
                             </div>
                         </div>
@@ -130,9 +130,9 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                             <button type="button"
                                 disabled={deletedL ? true : false}
                                 className="flex items-center justify-center gap-1 px-2 md:px-3 rounded-xl 
-                                text-white bg-green-800 cursor-pointer hover:bg-green-700 
+                                text-white bg-emerald-800 cursor-pointer hover:bg-emerald-700 
                                 transition-all duration-300 text-sm flex-1"
-                                onClick={(e) => handleDelete(e, item.id)}
+                                onClick={() => { }}
                             >
                                 <Edit size={14} />
                                 ویرایش
@@ -141,7 +141,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                                 disabled={deletedL ? true : false}
                                 className="flex items-center justify-start gap-1 px-2 md:px-3 rounded-sm 
                                 text-white bg-pink-800 cursor-pointer hover:bg-pink-700 
-                                transition-all duration-300 text-sm py-1" 
+                                transition-all duration-300 text-sm py-1"
                                 onClick={(e) => handleDelete(e, item.id)}
                             >
                                 <X size={14} />
@@ -156,12 +156,14 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 const remaining = Math.floor(3.49 - (elapsed / 1000));
 
                 return (
-                    <button type="button"
-                        className="px-2 h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
-                        onClick={(e) => handleUndoDelete(e)}
-                    >
-                        لغو ({remaining})
-                    </button>
+                    <div className="text-center">
+                        <button type="button"
+                            className="sticky md:w-64 left-auto right-auto bottom-2 px-2 h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
+                            onClick={(e) => handleUndoDelete(e)}
+                        >
+                            لغو ({remaining})
+                        </button>
+                    </div>
                 );
             })()}
         </div>
