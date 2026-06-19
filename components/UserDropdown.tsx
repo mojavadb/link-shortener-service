@@ -1,5 +1,5 @@
 "use client";
-import { UserCircle2Icon } from "lucide-react";
+import { ArrowLeft, Trash2, UserCircle2Icon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { deleteAccount } from "@/actions/deleteUser";
 import React, { useEffect, useRef } from "react";
@@ -24,7 +24,6 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen }
         }
 
         document.addEventListener("mousedown", handleClickOutside);
-        // document.addEventListener("mousedown");
 
         return () => {
             document.removeEventListener(
@@ -78,8 +77,10 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen }
                             setIsMenuOpen(!isMenuOpen);
                             setIsUserAccountInfoOpen(!isUserAccountInfoOpen)
                         }}
-                            className="flex-1 p-2 text-white hover:text-blue-300 rounded-lg transition-all duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer">
+                            className="flex-1 p-2 text-white hover:text-blue-300 rounded-lg transition-all
+                            flex items-center justify-center gap-1 duration-200  bg-pink-700 hover:bg-pink-800 cursor-pointer">
                             خروج
+                            <ArrowLeft size={16} />
                         </button>
 
                         <button
@@ -92,9 +93,11 @@ export default function UserDropdown({ isMenuOpen, setIsMenuOpen }
 
                                 await deleteAccount();
                             }}
-                            className="px-2 rounded-lg bg-red-500 py-2 text-white"
+                            className="px-2 rounded-lg bg-red-500 py-2 text-white
+                            flex items-center justify-center gap-1"
                         >
                             حذف حساب
+                            <Trash2 size={16} />
                         </button>
                     </div>
                 </div>

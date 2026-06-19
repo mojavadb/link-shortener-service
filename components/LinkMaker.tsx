@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
+import { CaseLower, MapPin, ShieldOff } from "lucide-react";
 
 async function createNewLink(url: string, code: string, expiredLeft: number) {
     try {
@@ -91,7 +92,11 @@ export default function LinkMaker(
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
             <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
             <div>
-                <label className="text-yellow-800 text-sm" htmlFor="primaryLink">آدرس:</label>
+                <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" 
+                htmlFor="primaryLink">
+                    <MapPin size={14} />
+                    آدرس:
+                </label>
                 <input
                     type="text"
                     id="primaryLink"
@@ -107,7 +112,11 @@ export default function LinkMaker(
                 />
             </div>
             <div>
-                <label className="text-yellow-800 text-sm" htmlFor="primaryLink">کد نهایی (اختیاری):</label>
+                <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
+                 htmlFor="primaryLink">
+                    <CaseLower size={14} />
+                   کد دلخواه:
+                </label>
                 <input
                     type="text"
                     id="finalcode"
@@ -123,7 +132,10 @@ export default function LinkMaker(
                 />
             </div>
             <div>
-                <label className="block mb-4 text-yellow-800 text-sm" htmlFor="primaryLink">انقضا لینک: (خالی یعنی از بین نمیرود)</label>
+                <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="primaryLink">
+                   <ShieldOff size={14} />
+                   تاریخ انقضا:
+                </label>
                 <div dir="ltr" className="flex flex-row align-center justify-center">
                     <input
                         type="number"
@@ -182,7 +194,7 @@ export default function LinkMaker(
             <div className="px-8 flex justify-center items-center">
                 <button
                     type="submit"
-                    className="px-6 md:px-9 py-2 rounded-2xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
+                    className="px-6 md:px-9 py-2 text-sm rounded-2xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                 >
                     ساخت لینک کوتاه
                 </button>

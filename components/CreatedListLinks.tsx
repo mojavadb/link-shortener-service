@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
+import { Edit, Eye, X } from "lucide-react";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -111,21 +112,42 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
             </form>
             <ul className="w-full">
                 {showedL.map(item =>
-                    <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2 flex align-center justify-between gap-6">
-                        <div className="flex flex-col gap-2 text-sm" dir="ltr">
-                            <Link href={`/s/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/s/{item.finalCode}</Link>
-                            <a target="_blank"
-                                rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
+                    <li key={item.id} className="border border-gray-200 mb-5 px-3 py-2">
+                        <div className="flex align-center justify-between gap-6 mb-4">
+                            <div className="flex flex-col gap-2 text-sm" dir="ltr">
+                                <Link href={`/s/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/s/{item.finalCode}</Link>
+                                <a target="_blank"
+                                    rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
+                            </div>
+                            <div className="flex flex-col gap-2 text-sm">
+                                <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
+                                    {item.clicks} <Eye size={12} />
+                                </div>
+                                <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-2 text-sm">
-                            <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
-                            <span className="text-xs text-gray-400">{`تعداد بازدید: ${item.clicks}`}</span>
+                        <div className="flex align-center justify-between gap-6">
+                            <button type="button"
+                                disabled={deletedL ? true : false}
+                                className="flex items-center justify-center gap-1 px-2 md:px-3 rounded-xl 
+                                text-white bg-green-800 cursor-pointer hover:bg-green-700 
+                                transition-all duration-300 text-sm flex-1"
+                                onClick={(e) => handleDelete(e, item.id)}
+                            >
+                                <Edit size={14} />
+                                ویرایش
+                            </button>
+                            <button type="button"
+                                disabled={deletedL ? true : false}
+                                className="flex items-center justify-start gap-1 px-2 md:px-3 rounded-sm 
+                                text-white bg-pink-800 cursor-pointer hover:bg-pink-700 
+                                transition-all duration-300 text-sm py-1" 
+                                onClick={(e) => handleDelete(e, item.id)}
+                            >
+                                <X size={14} />
+                                حذف
+                            </button>
                         </div>
-                        <button type="button"
-                            disabled={deletedL ? true : false}
-                            className="px-2 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
-                            onClick={(e) => handleDelete(e, item.id)}
-                        >حذف</button>
                     </li>
                 )}
             </ul>

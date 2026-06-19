@@ -2,9 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react"
-import AdvancedSpinner from "./AdvancedSpinner";
+import { useSession } from "next-auth/react"
 import UserDropdown from "./UserDropdown";
+import { Link2, Menu, Plus, X } from "lucide-react";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
@@ -23,16 +23,18 @@ export default function Header() {
                     Link Sortener
                 </Link>
 
-                <nav className="hidden md:flex items-center gap-6">
+                <nav className="hidden md:flex items-center">
                     {session?.user ?
-                        <div className="text-sm flex gap-2 items-center justify-between">
+                        <div className="text-sm flex gap-6 items-center justify-between">
                             <Link href={"/created-links"} 
-                                className="hover:text-blue-600">
-                                لیست لینک ها
+                                className="hover:text-blue-600 flex items-center justify-start gap-1">
+                                <Link2 size={14} />
+                                لینک ها
                             </Link>
                             <Link href={"/"} 
-                                className="hover:text-blue-600">
-                                ساخت لینک جدید
+                                className="hover:text-blue-600 flex items-center justify-start gap-1">
+                                <Plus size={14} />
+                                 لینک جدید
                             </Link>
                             <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                         </div>
@@ -48,31 +50,7 @@ export default function Header() {
                     className="md:hidden"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Toggle Menu"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        {isMenuOpen ? (
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        ) : (
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                        )}
-                    </svg>
-                </button>
+                > {isMenuOpen ? <X size={18} /> : <Menu size={18} />} </button>
             </div>
 
             {isMenuOpen && (
@@ -83,14 +61,16 @@ export default function Header() {
                                 <Link href={"/created-links"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600">
-                                    لیست لینک ها
+                                    className="hover:text-blue-600 flex items-center justify-start gap-1">
+                                     <Link2 size={14} />
+                                     لینک ها
                                 </Link>
                                 <Link href={"/"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600">
-                                    ساخت لینک جدید
+                                    className="hover:text-blue-600 flex items-center justify-start gap-1">
+                                        <Plus size={14} />
+                                     لینک جدید
                                 </Link>
                                 <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                             </div>
