@@ -138,6 +138,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-1">
                     <label htmlFor="expiration" className="text-xs">تاریخ انقضا</label>
                     <input
+                        id="expiration"
                         checked={sortedBy === "expiration" ? true : false}
                         onChange={() => setSortedBy("expiration")}
                         type="radio" name="expiration" />
@@ -145,6 +146,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
                     <label htmlFor="click" className="text-xs">تعداد کلیک</label>
                     <input
+                        id="click"
                         checked={sortedBy === "click" ? true : false}
                         onChange={() => setSortedBy("click")}
                         type="radio" name="click" />
@@ -152,6 +154,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
                     <label htmlFor="createtime" className="text-xs">زمان ساخت</label>
                     <input
+                        id="createtime"
                         checked={sortedBy === "createtime" ? true : false}
                         onChange={() => setSortedBy("createtime")}
                         type="radio" name="createtime" />
