@@ -53,7 +53,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
         if (minutes > 0) parts.push(`${minutes} دقیقه`);
 
         if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
-            return "چند لحظه"
+            return "چند لحظه دیگر"
         }
 
         return `${parts.join(" و ")}`;

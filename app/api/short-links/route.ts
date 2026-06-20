@@ -116,7 +116,7 @@ export async function PUT(request: NextRequest) {
 
     if (!session?.user) {
       return NextResponse.json(
-        { message: "ابتدا وارد حساب کاربری شوید." },
+        { message: ["ابتدا وارد حساب کاربری شوید."] },
         { status: 401 }
       );
     }
@@ -140,13 +140,14 @@ export async function PUT(request: NextRequest) {
     // اعتبارسنجی کد نهایی
     if (customCode.length !== 6) {
       errors.push("کد نهایی باید 6 کاراکتر باشد.");
+    } else {
+      if (!/^[a-z0-9]{6}$/.test(customCode)) {
+        errors.push(
+          "کد نهایی فقط باید شامل حروف کوچک انگلیسی و اعداد باشد."
+        );
+      }
     }
 
-    if (!/^[a-z0-9]{6}$/.test(customCode)) {
-      errors.push(
-        "کد نهایی فقط باید شامل حروف کوچک انگلیسی و اعداد باشد."
-      );
-    }
 
     // اعتبارسنجی لینک
     const urlValidation = validateUrl(inputV);
@@ -171,7 +172,7 @@ export async function PUT(request: NextRequest) {
 
     if (!link) {
       return NextResponse.json(
-        { message: "لینک مورد نظر پیدا نشد." },
+        { message: ["لینک مورد نظر پیدا نشد."] },
         { status: 404 }
       );
     }
@@ -179,7 +180,7 @@ export async function PUT(request: NextRequest) {
     // بررسی مالکیت لینک
     if (link.creatorId !== session.user.id) {
       return NextResponse.json(
-        { message: "شما اجازه ویرایش این لینک را ندارید." },
+        { message: ["شما اجازه ویرایش این لینک را ندارید."] },
         { status: 403 }
       );
     }
@@ -203,23 +204,23 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updatedLink = await prisma.linkItem.update({
-      where: {
-        id,
-      },
-      data: {
-        mainUrl: inputV,
-        finalCode: customCode,
-        ...(endexpire && {
-          expiresAt: null,
-        }),
-      },
+    const data: any = {
+      mainUrl: inputV,
+      finalCode: customCode,
+    };
+    console.log(endexpire);
+    if (endexpire === false) {
+      data.expiresAt = null;
+    }
+
+    await prisma.linkItem.update({
+      where: { id },
+      data,
     });
 
     return NextResponse.json(
       {
-        message: "لینک با موفقیت ویرایش شد.",
-        data: updatedLink,
+        message: ["لینک با موفقیت ویرایش شد."]
       },
       { status: 200 }
     );
@@ -228,7 +229,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "خطایی در سرور رخ داد.",
+        message: ["خطایی در سرور رخ داد."],
       },
       { status: 500 }
     );

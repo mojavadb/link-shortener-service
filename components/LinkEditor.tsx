@@ -2,29 +2,41 @@
 
 import { LinkItem } from "@/app/generated/prisma/client";
 import { CaseLower, Link, ShieldOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-async function updateLink(url: string, code: string, endexpire: boolean, linkId: number | undefined) {
-    try {
-        const response = await fetch(
-            `/api/short-links`, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                inputV: url,
-                customCode: code,
-                endexpire: endexpire,
-                id: linkId
-            })
-        }
-        );
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        return error;
-    }
+interface ApiResponse {
+    status: number;
+    data: {
+        message?: string[];
+    };
+}
+
+async function updateLink(
+    url: string,
+    code: string,
+    endexpire: boolean,
+    linkId?: number
+): Promise<ApiResponse> {
+    const response = await fetch("/api/short-links", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            inputV: url,
+            customCode: code,
+            endexpire,
+            id: linkId,
+        }),
+    });
+
+    const result = await response.json();
+
+    return {
+        status: response.status,
+        data: result,
+    };
 }
 
 export default function LinkEditor({ link }: { link: LinkItem | null }) {
@@ -33,11 +45,33 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
     const [hasExpried, setHasExpried] = useState<boolean>(
         link?.expiresAt ? true : false
     );
-    async function handleSubmit(e: any) {
+    const [errors, setErrors] = React.useState<string[]>([]);
+    const router = useRouter();
+
+    async function handleSubmit(
+        e: React.FormEvent<HTMLFormElement>
+    ) {
         e.preventDefault();
-        const res = await updateLink(inputV, customCodeV, hasExpried, link?.id);
-        if (res.message) {
-            console.log(res.message);
+
+        try {
+            const res = await updateLink(
+                inputV,
+                customCodeV,
+                hasExpried,
+                link?.id
+            );
+
+            if (res.status === 200) {
+                router.replace("/created-links");
+                return;
+            }
+
+            if (res.data.message) {
+                setErrors(res.data.message);
+            }
+        } catch (err) {
+            setErrors(["خطا در ارتباط با سرور"]);
+            console.error(err);
         }
     }
 
@@ -104,14 +138,14 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                     ثبت تغییرات
                 </button>
             </div>
-            {/* <div className="text-center">
+            <div className="text-center">
                 {errors?.map(err =>
                     <p key={err}
                         className="block h-4 w-full text-sm font-semibold text-red-600">
-                        {err} 
+                        {err}
                     </p>
                 )}
-            </div> */}
+            </div>
         </form>
     );
 }
