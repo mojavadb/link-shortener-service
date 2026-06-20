@@ -8,6 +8,11 @@ import { Edit, Eye, X } from "lucide-react";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
+type SortedStates =
+    | "expiration"
+    | "click"
+    | "createtime";
+
 
 export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
@@ -16,9 +21,29 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
 
     const [now, setNow] = React.useState<number>(Date.now());
 
+    const [sortedBy, setSortedBy] = React.useState<SortedStates>("expiration");
     const [searchL, setSearchL] = React.useState<string>("");
 
-    const showedL = data.filter(link =>
+    const sortedLinks = [...data].sort((a, b) => {
+        switch (sortedBy) {
+            case "click":
+                return b.clicks - a.clicks;
+            case "expiration":
+                return (
+                    new Date(b.expiresAt ?? 0).getTime() -
+                    new Date(a.expiresAt ?? 0).getTime()
+                );
+            case "createtime":
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            default:
+                return 0;
+        }
+    });
+
+    const showedL = sortedLinks.filter(link =>
         link.mainUrl.toLowerCase().includes(searchL.toLowerCase()) ||
         link.finalCode.toLowerCase().includes(searchL.toLowerCase())
     );
@@ -109,6 +134,29 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                     placeholder="search"
                 />
             </form>
+            <div className="flex flex-row items-center justify-around gap-2 my-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-1">
+                    <label htmlFor="expiration" className="text-xs">تاریخ انقضا</label>
+                    <input
+                        checked={sortedBy === "expiration" ? true : false}
+                        onChange={() => setSortedBy("expiration")}
+                        type="radio" name="expiration" />
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
+                    <label htmlFor="click" className="text-xs">تعداد کلیک</label>
+                    <input
+                        checked={sortedBy === "click" ? true : false}
+                        onChange={() => setSortedBy("click")}
+                        type="radio" name="click" />
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
+                    <label htmlFor="createtime" className="text-xs">زمان ساخت</label>
+                    <input
+                        checked={sortedBy === "createtime" ? true : false}
+                        onChange={() => setSortedBy("createtime")}
+                        type="radio" name="createtime" />
+                </div>
+            </div>
             <ul className="w-full flex flex-col items-center lg:grid grid-cols-2 lg:gap-10">
                 {showedL.map((item, index) =>
                     <li key={item.id} className="border w-full sm:w-96 md:min-w-96 border-gray-200 mb-5 px-3 py-2 relative">
