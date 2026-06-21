@@ -90,7 +90,7 @@ export default function LinkMaker(
     }
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
-            <h2 className="text-center mb-3 text-pink-700 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
+            <h2 className="text-center mb-3 mt-6 text-pink-700 font-bold text-3xl">سرویس کوتاه کننده لینک</h2>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" 
                 htmlFor="address">

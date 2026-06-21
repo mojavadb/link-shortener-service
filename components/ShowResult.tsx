@@ -43,7 +43,7 @@ function ShowResult(text: { text: string }) {
 
     return (
         <>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 mt-6">
                 <div className="flex gap-2">
                     <input
                         type="text"

@@ -77,7 +77,7 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
 
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
-            <div className="flex flex-row items-center justify-between mb-3">
+            <div className="flex flex-row items-center justify-between mb-3 mt-6">
                 <h2 className="text-center text-emerald-600 font-bold text-3xl">ویرایش لینک:</h2>
                 <ArrowLeft size={24} color="green"
                 className="cursor-pointer p-0.5" 
