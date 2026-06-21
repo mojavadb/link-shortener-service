@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
-import { ArrowLeft, Edit, Eye, X } from "lucide-react";
+import { ArrowLeft, Edit, Eye, Trash, X } from "lucide-react";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -176,13 +176,13 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         <div className="absolute -top-2 -right-2 p-1 rounded-full h-6 w-6 text-center text-xs bg-white">
                             {index + 1} -
                         </div>
-                        <div className="flex align-center justify-start gap-6 mb-4">
+                        <div className="flex flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col gap-2 text-sm" dir="ltr">
-                                <Link href={`/s/${item.finalCode}`} className="text-sm text-red-800">{domain?.substring(7)}/s/{item.finalCode}</Link>
+                                <Link href={`/s/${item.finalCode}`} className="text-lg m-2 font-bold text-red-600">{domain?.substring(7)}/s/{item.finalCode}</Link>
                                 <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                             </div>
-                            <div className="flex flex-col gap-2 text-sm">
+                            <div className="flex flex-col gap-2 text-sm m-2">
                                 <span className="text-xs text-gray-400 text-start">انقضا:</span>
                                 <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
                             </div>
@@ -190,7 +190,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         <div className="flex align-center justify-between gap-6">
                             <Link
                                 className="flex items-center justify-center gap-1 px-2 md:px-3 rounded-xl 
-                                text-white bg-emerald-800 cursor-pointer hover:bg-emerald-700 
+                                text-white bg-emerald-700 cursor-pointer hover:bg-emerald-600 
                                 transition-all duration-300 text-sm flex-1"
                                 href={`/created-links/${item.finalCode}`}
                             >
@@ -199,13 +199,12 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                             </Link>
                             <button type="button"
                                 disabled={deletedL ? true : false}
-                                className="flex items-center justify-start gap-1 px-2 md:px-3 rounded-sm 
-                                text-white bg-pink-800 cursor-pointer hover:bg-pink-700 
-                                transition-all duration-300 text-sm py-1"
+                                className="flex items-center justify-start px-2 md:px-3 rounded-sm 
+                                text-gray-600 cursor-pointer hover:bg-red-500 hover:text-white
+                                transition-all duration-300 text-sm py-2"
                                 onClick={(e) => handleDelete(e, item.id)}
                             >
-                                <X size={14} />
-                                حذف
+                                <Trash size={16} />
                             </button>
                         </div>
                     </li>
