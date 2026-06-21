@@ -127,12 +127,14 @@ export async function PUT(request: NextRequest) {
       inputV,
       customCode,
       endexpire,
-      id,
+      resetClicks,
+      id
     }: {
       inputV: string;
       customCode: string;
       endexpire: boolean;
       id: number;
+      resetClicks: boolean
     } = body;
 
     const errors: string[] = [];
@@ -209,6 +211,9 @@ export async function PUT(request: NextRequest) {
       finalCode: customCode,
     };
     console.log(endexpire);
+    if (resetClicks === true) {
+      data.clicks = 0;
+    }
     if (endexpire === false) {
       data.expiresAt = null;
     }

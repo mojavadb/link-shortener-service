@@ -16,6 +16,7 @@ async function updateLink(
     url: string,
     code: string,
     endexpire: boolean,
+    resetClicks: boolean,
     linkId?: number
 ): Promise<ApiResponse> {
     const response = await fetch("/api/short-links", {
@@ -28,6 +29,7 @@ async function updateLink(
             customCode: code,
             endexpire,
             id: linkId,
+            resetClicks: resetClicks
         }),
     });
 
@@ -59,6 +61,7 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                 inputV,
                 customCodeV,
                 hasExpried,
+                resetClicks,
                 link?.id
             );
 
