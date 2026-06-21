@@ -99,7 +99,7 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                         setInputV(e.target.value)
                     }
                     dir="ltr"
-                    className="sm:min-w-96 p-2 my-2 w-full text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
+                    className="sm:min-w-96 min-w-64 p-2 my-2 w-full text-gray-700 bg-gray-50 border-2 border-gray-200 rounded-xl 
             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition-all 
             duration-200 peer"
                 />
