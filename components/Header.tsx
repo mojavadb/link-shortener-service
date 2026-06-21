@@ -37,13 +37,13 @@ export default function Header() {
                     {session?.user ?
                         <div className="text-sm flex gap-6 items-center justify-between">
                             <Link href={"/created-links"} 
-                                className="hover:text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
-                                <Link2 size={20} />
+                                className="hover:text-blue-600 flex items-center justify-start gap-1 font-bold text-md">
+                                <Link2 size={18} />
                                 لینک ها
                             </Link>
                             <Link href={"/"} 
-                                className="text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
-                                <Plus size={20} />
+                                className="text-blue-600 flex items-center justify-start gap-0.5 font-bold text-md">
+                                <Plus size={18} />
                                  لینک جدید
                             </Link>
                             <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
