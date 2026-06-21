@@ -33,7 +33,7 @@ export default function Header() {
                                 لینک ها
                             </Link>
                             <Link href={"/"} 
-                                className="hover:text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
+                                className="text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
                                 <Plus size={20} />
                                  لینک جدید
                             </Link>
@@ -62,7 +62,7 @@ export default function Header() {
                                 <Link href={"/created-links"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600 font-bold flex text-md items-center justify-start gap-1">
+                                    className="text-blue-600 font-bold flex text-md items-center justify-start gap-1">
                                      <Link2 size={16} />
                                      لینک ها
                                 </Link>

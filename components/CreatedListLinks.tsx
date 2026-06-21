@@ -154,7 +154,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                             className={sortedBy === item.value ? 
                             "bg-gray-700 text-white shadow-lg shadow-gray-300 duration-200 -translate-z-18 -translate-y-1 rounded-full" : 
                             ""}>
-                            <label htmlFor={item.value} className="block text-xs px-4 py-2">{item.label}</label>
+                            <label htmlFor={item.value} className="block text-xs px-5 py-2">{item.label}</label>
                             <input
                                 id={item.value} className="hidden"
                                 checked={sortedBy === item.value ? true : false}
@@ -175,13 +175,13 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         </div>
                         <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
-                                <Link href={`/s/${item.finalCode}`} className="text-lg font-bold text-red-600">{domain?.substring(7)}/s/{item.finalCode}</Link>
+                                <Link href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain?.substring(7)}/s/{item.finalCode}</Link>
                                 <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl}
                                     className="text-xs mb-2 text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 <QRCode
                                     value={`${domain}/s/${item.finalCode}`}
-                                    size={100}
+                                    size={64}
                                     bgColor="#FFFFFF"
                                     fgColor="#000000"
                                 />
@@ -191,7 +191,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                                     <span className="block">انقضا:</span>
                                     <span className="">{timeLeft(item.expiresAt)}</span>
                                 </div>
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-end gap-3">
                                     <Link
                                         className="text-emerald-700 cursor-pointer"
                                         href={`/created-links/${item.finalCode}`}
