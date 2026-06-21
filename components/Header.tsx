@@ -30,7 +30,7 @@ export default function Header() {
                 className={`${dancingScript.className} text-lg font-bold flex items-center gap-1 text-indigo-800`}
                     onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
-                    <Scissors size={22} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="indigo" />
+                    <Scissors size={20} className="rotate-90" fontWeight={"bold"} strokeWidth={2} color="indigo" />
                 </Link>
 
                 <nav className="hidden sm:flex items-center">
