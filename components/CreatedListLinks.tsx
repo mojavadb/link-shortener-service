@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
 import { ArrowLeft, Edit, Eye, Trash, X } from "lucide-react";
+import QRCode from "react-qr-code";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -118,10 +119,10 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
             <div className="flex flex-row items-center justify-between mb-3">
                 <h2 className="text-center text-gray-600 font-bold text-3xl">لیست لینک های کوتاه شده:</h2>
                 <ArrowLeft size={24} color="gray"
-                className="cursor-pointer p-0.5" 
-                onClick={() => {
-                    router.back();
-                }}/>
+                    className="cursor-pointer p-0.5"
+                    onClick={() => {
+                        router.back();
+                    }} />
             </div>
             <form className="flex flex-col items-center justify-center">
                 <label htmlFor="search" className="block w-full sm:w-96 text-sm font-semibold text-gray-600 mb-2">
@@ -167,46 +168,50 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         type="radio" name="createtime" />
                 </div>
             </div>
-            <ul className="w-full flex flex-col items-center lg:grid grid-cols-2 lg:gap-10">
+            <ul className="w-full flex flex-col items-center lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
                 {showedL.map((item, index) =>
-                    <li key={item.id} className="border w-full sm:w-96 md:min-w-96 border-gray-200 mb-5 px-3 py-2 relative">
+                    <li key={item.id} className="border mb-5 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
                         <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
                             {item.clicks} <Eye size={12} />
                         </div>
                         <div className="absolute -top-2 -right-2 p-1 rounded-full h-6 w-6 text-center text-xs bg-white">
                             {index + 1} -
                         </div>
-                        <div className="flex flex-col sm:flex-row align-center justify-start gap-6 mb-4">
-                            <div className="flex flex-col gap-2 text-sm" dir="ltr">
-                                <Link href={`/s/${item.finalCode}`} className="text-lg m-2 font-bold text-red-600">{domain?.substring(7)}/s/{item.finalCode}</Link>
-                                <a target="_blank"
-                                    rel="noopener noreferrer" href={item.mainUrl} className="text-xs text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
+                        <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
+                            <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
+                                <Link href={`/s/${item.finalCode}`} className="text-lg font-bold text-red-600">{domain?.substring(7)}/s/{item.finalCode}</Link>
+                                <a target="_blank" 
+                                    rel="noopener noreferrer" href={item.mainUrl} 
+                                    className="text-xs mb-2 text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
+                                <QRCode
+                                    value={`${domain}/s/${item.finalCode}`}
+                                    size={100}
+                                    bgColor="#FFFFFF"
+                                    fgColor="#000000"
+                                />
                             </div>
-                            <div className="flex flex-col gap-2 text-sm m-2">
-                                <span className="text-xs text-gray-400 text-start">انقضا:</span>
-                                <span className="text-xs text-gray-400">{timeLeft(item.expiresAt)}</span>
+                            <div className="flex flex-1 flex-col justify-between gap-2 text-sm m-2">
+                                <div className="text-xs text-gray-400">
+                                    <span className="block">انقضا:</span>
+                                <span className="">{timeLeft(item.expiresAt)}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <Link
+                                        className="text-emerald-700 cursor-pointer"
+                                        href={`/created-links/${item.finalCode}`}
+                                    >
+                                        <Edit size={16} />                                    </Link>
+                                    <button type="button"
+                                        disabled={deletedL ? true : false}
+                                        className="text-red-600 cursor-pointer p-1"
+                                        onClick={(e) => handleDelete(e, item.id)}
+                                    >
+                                        <Trash size={16} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex align-center justify-between gap-6">
-                            <Link
-                                className="flex items-center justify-center gap-1 px-2 md:px-3 rounded-xl 
-                                text-white bg-emerald-700 cursor-pointer hover:bg-emerald-600 
-                                transition-all duration-300 text-sm flex-1"
-                                href={`/created-links/${item.finalCode}`}
-                            >
-                                <Edit size={14} />
-                                ویرایش
-                            </Link>
-                            <button type="button"
-                                disabled={deletedL ? true : false}
-                                className="flex items-center justify-start px-2 md:px-3 rounded-sm 
-                                text-gray-600 cursor-pointer hover:bg-red-500 hover:text-white
-                                transition-all duration-300 text-sm py-2"
-                                onClick={(e) => handleDelete(e, item.id)}
-                            >
-                                <Trash size={16} />
-                            </button>
-                        </div>
+
                     </li>
                 )}
             </ul>
