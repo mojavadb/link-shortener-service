@@ -5,6 +5,14 @@ import Link from "next/link";
 import { useSession } from "next-auth/react"
 import UserDropdown from "./UserDropdown";
 import { Link2, Menu, Plus, Scissors, X } from "lucide-react";
+import { Dancing_Script } from "next/font/google";
+
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
@@ -18,7 +26,8 @@ export default function Header() {
     return (
         <header className="bg-white shadow-md sticky top-0 z-10">
             <div className="container mx-auto md:px-24 flex items-center justify-between px-4 py-4">
-                <Link href="/" className="text-lg font-bold flex items-center gap-1 text-indigo-800"
+                <Link href="/"
+                className={`${dancingScript.className} text-lg font-bold flex items-center gap-1 text-indigo-800`}
                     onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
                     <Scissors size={22} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="indigo" />
