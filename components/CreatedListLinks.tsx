@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
-import { ArrowLeft, Edit, Eye, Trash, X } from "lucide-react";
+import { ArrowLeft, Check, Clock, Copy, Edit, Eye, Trash, X } from "lucide-react";
 import QRCode from "react-qr-code";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
@@ -15,9 +15,9 @@ type SortedStates =
     | "createtime";
 
 const sortOptions = [
-  { value: "expiration", label: "تاریخ انقضا" },
-  { value: "click", label: "تعداد کلیک" },
-  { value: "createtime", label: "زمان ساخت" },
+    { value: "expiration", label: "تاریخ انقضا" },
+    { value: "click", label: "تعداد کلیک" },
+    { value: "createtime", label: "زمان ساخت" },
 ] as const;
 
 export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
@@ -29,6 +29,8 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
 
     const [sortedBy, setSortedBy] = React.useState<SortedStates>("expiration");
     const [searchL, setSearchL] = React.useState<string>("");
+
+    const [copiedId, setCopiedId] = React.useState<number | null>(null);
 
     const sortedLinks = [...data].sort((a, b) => {
         switch (sortedBy) {
@@ -90,6 +92,19 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
         return `${parts.join(" و ")}`;
     }
 
+    const handleCopy = async (id: number, url: string) => {
+        try {
+            await navigator.clipboard.writeText(url);
+
+            setCopiedId(id);
+
+            setTimeout(() => {
+                setCopiedId(null);
+            }, 2000);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     async function handleDelete(e: any, id: number) {
         e.preventDefault();
@@ -151,9 +166,9 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 {
                     sortOptions.map(item => (
                         <div key={item.label}
-                            className={sortedBy === item.value ? 
-                            "bg-gray-700 text-white shadow-lg shadow-gray-300 duration-200 -translate-z-18 -translate-y-1 rounded-full" : 
-                            ""}>
+                            className={sortedBy === item.value ?
+                                "bg-gray-700 text-white shadow-lg shadow-gray-300 duration-200 -translate-z-18 -translate-y-1 rounded-full" :
+                                ""}>
                             <label htmlFor={item.value} className="block text-xs px-5 py-2">{item.label}</label>
                             <input
                                 id={item.value} className="hidden"
@@ -165,14 +180,8 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                 }
             </div>
             <ul className="w-full flex flex-col items-center lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
-                {showedL.map((item, index) =>
+                {showedL.map((item) =>
                     <li key={item.id} className="border mb-5 md:mb-0 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
-                        <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
-                            {item.clicks} <Eye size={12} />
-                        </div>
-                        <div className="absolute -top-2 -right-2 p-1 rounded-full h-6 w-6 text-center text-xs bg-white">
-                            {index + 1} -
-                        </div>
                         <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
                                 <Link href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain?.substring(7)}/s/{item.finalCode}</Link>
@@ -186,12 +195,24 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                                     fgColor="#000000"
                                 />
                             </div>
-                            <div className="flex flex-1 flex-col justify-between gap-2 text-sm">
-                                <div className="text-xs text-gray-400">
-                                    <span className="block">انقضا:</span>
-                                    <span className="">{timeLeft(item.expiresAt)}</span>
+                            <div className="flex flex-1 sm:flex-col justify-between gap-2 text-sm">
+                                <div className="text-gray-500">
+                                    <div className="text-rose-600 text-xs flex items-center gap-1 mb-1">
+                                        <Eye size={12} />
+                                        {item.clicks}
+                                        <span>بازدید</span>
+                                    </div>
+                                    <div className="flex flex-row gap-1 items-center">
+                                        <Clock size={12} />
+                                        <span className="text-xs">{timeLeft(item.expiresAt)}</span>
+                                    </div>
                                 </div>
                                 <div className="flex items-center justify-end gap-3">
+                                    <button type="button" className="cursor-pointer"
+                                        onClick={() => handleCopy(item?.id, `${domain}/s/${item.finalCode}`)}
+                                    >
+                                        {copiedId === item?.id ? <Check size={16} /> : <Copy size={16} />}
+                                    </button>
                                     <Link
                                         className="text-emerald-700 cursor-pointer"
                                         href={`/created-links/${item.finalCode}`}

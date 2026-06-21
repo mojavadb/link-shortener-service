@@ -62,14 +62,14 @@ export default function Header() {
                                 <Link href={"/created-links"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="text-blue-600 font-bold flex text-md items-center justify-start gap-1">
+                                    className="hover:text-blue-600 font-bold flex text-md items-center justify-start gap-1">
                                      <Link2 size={16} />
                                      لینک ها
                                 </Link>
                                 <Link href={"/"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600 text-md font-bold flex items-center justify-start gap-1">
+                                    className="text-blue-600 text-md font-bold flex items-center justify-start gap-1">
                                         <Plus size={16} />
                                      لینک جدید
                                 </Link>

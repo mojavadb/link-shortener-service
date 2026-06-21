@@ -1,3 +1,4 @@
+import { Check, Copy } from "lucide-react";
 import React from "react";
 import QRCode from "react-qr-code";
 
@@ -60,7 +61,7 @@ function ShowResult(text: { text: string }) {
                                 : "bg-indigo-700 hover:bg-indigo-800"
                             } text-white cursor-pointer text-sm`}
                     >
-                        {copied ? "کپی شد" : "کپی"}
+                        {copied ? <Check size={18} /> : <Copy size={18} />}
                     </button>
                 </div>
 
