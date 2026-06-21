@@ -16,9 +16,9 @@ export default function Header() {
     }
 
     return (
-        <header className="bg-white">
-            <div className="container mx-auto flex items-center justify-between px-4 py-4">
-                <Link href="/" className="text-md font-bold flex items-center gap-1 text-indigo-800"
+        <header className="bg-white shadow-md">
+            <div className="container mx-auto md:px-24 flex items-center justify-between px-4 py-4">
+                <Link href="/" className="text-lg font-bold flex items-center gap-1 text-indigo-800"
                     onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
                     <Scissors size={22} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="indigo" />
@@ -28,13 +28,13 @@ export default function Header() {
                     {session?.user ?
                         <div className="text-sm flex gap-6 items-center justify-between">
                             <Link href={"/created-links"} 
-                                className="hover:text-blue-600 flex items-center justify-start gap-1">
-                                <Link2 size={14} />
+                                className="hover:text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
+                                <Link2 size={20} />
                                 لینک ها
                             </Link>
                             <Link href={"/"} 
-                                className="hover:text-blue-600 flex items-center justify-start gap-1">
-                                <Plus size={14} />
+                                className="hover:text-blue-600 flex items-center justify-start gap-1 font-bold text-lg">
+                                <Plus size={20} />
                                  لینک جدید
                             </Link>
                             <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
@@ -62,15 +62,15 @@ export default function Header() {
                                 <Link href={"/created-links"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600 flex items-center justify-start gap-1">
-                                     <Link2 size={14} />
+                                    className="hover:text-blue-600 font-bold flex text-md items-center justify-start gap-1">
+                                     <Link2 size={16} />
                                      لینک ها
                                 </Link>
                                 <Link href={"/"} onClick={() => {
                                     setIsMenuOpen(false)
                                 }}
-                                    className="hover:text-blue-600 flex items-center justify-start gap-1">
-                                        <Plus size={14} />
+                                    className="hover:text-blue-600 text-md font-bold flex items-center justify-start gap-1">
+                                        <Plus size={16} />
                                      لینک جدید
                                 </Link>
                                 <UserDropdown isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
