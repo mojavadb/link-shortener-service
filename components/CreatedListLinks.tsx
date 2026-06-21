@@ -170,7 +170,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
             </div>
             <ul className="w-full flex flex-col items-center lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
                 {showedL.map((item, index) =>
-                    <li key={item.id} className="border mb-5 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
+                    <li key={item.id} className="border mb-5 md:mb-0 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
                         <div className="absolute -top-2 -left-2 p-1 rounded-full bg-white text-xs text-rose-600 flex items-center justify-center gap-1">
                             {item.clicks} <Eye size={12} />
                         </div>
