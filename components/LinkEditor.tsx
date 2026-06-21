@@ -1,7 +1,7 @@
 "use client";
 
 import { LinkItem } from "@/app/generated/prisma/client";
-import { CaseLower, Link, ShieldOff } from "lucide-react";
+import { ArrowLeft, CaseLower, Link, ShieldOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -77,7 +77,14 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
 
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
-            <h2 className="text-center mb-3 text-emerald-600 font-bold text-3xl">ویرایش لینک</h2>
+            <div className="flex flex-row items-center justify-between mb-3">
+                <h2 className="text-center text-emerald-600 font-bold text-3xl">ویرایش لینک:</h2>
+                <ArrowLeft size={24} color="green"
+                className="cursor-pointer p-0.5" 
+                onClick={() => {
+                    router.back();
+                }}/>
+            </div>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
                     htmlFor="address">

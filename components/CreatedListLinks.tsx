@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
-import { Edit, Eye, X } from "lucide-react";
+import { ArrowLeft, Edit, Eye, X } from "lucide-react";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -115,7 +115,14 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
 
     return (
         <div className="relative px-3 py-2 md:px-9 md:py-6 flex flex-col gap-3 rounded-4 border-gray-200">
-            <h2 className="text-center mb-3 text-red-600 font-bold text-3xl">لیست لینک های کوتاه شده</h2>
+            <div className="flex flex-row items-center justify-between mb-3">
+                <h2 className="text-center text-red-600 font-bold text-3xl">لیست لینک های کوتاه شده:</h2>
+                <ArrowLeft size={24} color="red"
+                className="cursor-pointer p-0.5" 
+                onClick={() => {
+                    router.back();
+                }}/>
+            </div>
             <form className="flex flex-col items-center justify-center">
                 <label htmlFor="search" className="block w-full sm:w-96 text-sm font-semibold text-red-600 mb-2">
                     جستجو:
