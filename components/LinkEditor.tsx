@@ -1,7 +1,7 @@
 "use client";
 
 import { LinkItem } from "@/app/generated/prisma/client";
-import { ArrowLeft, CaseLower, Link, ShieldOff } from "lucide-react";
+import { ArrowLeft, CaseLower, Check, Link, MousePointerClick, ShieldOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -45,6 +45,7 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
     const [hasExpried, setHasExpried] = useState<boolean>(
         link?.expiresAt ? true : false
     );
+    const [resetClicks, setResetClicks] = React.useState<boolean>(false);
     const [errors, setErrors] = React.useState<string[]>([]);
     const router = useRouter();
 
@@ -80,10 +81,10 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
             <div className="flex flex-row items-start justify-between mb-3 mt-6">
                 <h2 className="text-center text-emerald-600 font-bold text-3xl">ویرایش لینک:</h2>
                 <ArrowLeft size={24} color="green"
-                className="cursor-pointer p-0.5" 
-                onClick={() => {
-                    router.back();
-                }}/>
+                    className="cursor-pointer p-0.5"
+                    onClick={() => {
+                        router.back();
+                    }} />
             </div>
             <div>
                 <label className="text-yellow-800 text-sm flex items-center justify-start gap-1"
@@ -123,19 +124,50 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
             duration-200 peer"
                 />
             </div>
-            <div>
+            <div className="flex items-center justify-between">
                 {link?.expiresAt &&
                     <>
-                        <label className="mb-4 text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
-                            <ShieldOff size={14} />
-                            تاریخ انقضا:
+                        <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
+                            {
+                                hasExpried ? (
+                                    <>
+                                        <ShieldOff size={14} />
+                                        <span>تاریخ انقضا حذف کن</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Check size={18} />
+                                        <span>ارسال کنید</span>
+                                    </>
+                                )
+                            }
                         </label>
-                        <div className="flex text-sm flex-row text-shadow-mauve-50 align-center justify-center gap-1">
-                            تاریخ انقضا نداشته باشد:
-                            <input type="checkbox" name="hasexpired"
+                        <div className="hidden">
+                            <input type="checkbox" name="hasexpired" id="hasexpired"
                                 checked={!hasExpried} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHasExpried(x => !x)} />
                         </div>
                     </>}
+                <div className="flex justify-start items-center gap-1">
+                    <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="resetclicks">
+                        {
+                            resetClicks ? (
+                                <>
+                                    <MousePointerClick size={14} />
+                                    <span>تعداد کلیک ها را صفر کن</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Check size={18} />
+                                    <span>ارسال کنید</span>
+                                </>
+                            )
+                        }
+                    </label>
+                    <div className="hidden">
+                        <input type="checkbox" name="resetclicks" id="resetclicks"
+                            checked={!resetClicks} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setResetClicks(x => !x)} />
+                    </div>
+                </div>
             </div>
             <div className="px-8 flex justify-center items-center">
                 <button
