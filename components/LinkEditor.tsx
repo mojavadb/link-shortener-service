@@ -152,13 +152,13 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
                         {
                             resetClicks ? (
                                 <>
-                                    <MousePointerClick size={14} />
-                                    <span>تعداد کلیک ها را صفر کن</span>
+                                    <Check size={18} />
+                                    <span>ارسال کنید</span>
                                 </>
                             ) : (
                                 <>
-                                    <Check size={18} />
-                                    <span>ارسال کنید</span>
+                                <MousePointerClick size={14} />
+                                <span>تعداد کلیک ها را صفر کن</span>
                                 </>
                             )
                         }
