@@ -14,6 +14,11 @@ type SortedStates =
     | "click"
     | "createtime";
 
+const sortOptions = [
+  { value: "expiration", label: "تاریخ انقضا" },
+  { value: "click", label: "تعداد کلیک" },
+  { value: "createtime", label: "زمان ساخت" },
+] as const;
 
 export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
@@ -142,31 +147,22 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                     placeholder="search"
                 />
             </form>
-            <div className="flex flex-row items-center justify-around gap-2 my-2">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-1">
-                    <label htmlFor="expiration" className="text-xs">تاریخ انقضا</label>
-                    <input
-                        id="expiration"
-                        checked={sortedBy === "expiration" ? true : false}
-                        onChange={() => setSortedBy("expiration")}
-                        type="radio" name="expiration" />
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
-                    <label htmlFor="click" className="text-xs">تعداد کلیک</label>
-                    <input
-                        id="click"
-                        checked={sortedBy === "click" ? true : false}
-                        onChange={() => setSortedBy("click")}
-                        type="radio" name="click" />
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-start gap-1">
-                    <label htmlFor="createtime" className="text-xs">زمان ساخت</label>
-                    <input
-                        id="createtime"
-                        checked={sortedBy === "createtime" ? true : false}
-                        onChange={() => setSortedBy("createtime")}
-                        type="radio" name="createtime" />
-                </div>
+            <div className="flex flex-row items-center justify-center my-5">
+                {
+                    sortOptions.map(item => (
+                        <div key={item.label}
+                            className={sortedBy === item.value ? 
+                            "bg-gray-700 text-white shadow-lg shadow-gray-300 duration-200 -translate-z-18 -translate-y-1 rounded-full" : 
+                            ""}>
+                            <label htmlFor={item.value} className="block text-xs px-4 py-2">{item.label}</label>
+                            <input
+                                id={item.value} className="hidden"
+                                checked={sortedBy === item.value ? true : false}
+                                onChange={() => setSortedBy(item.value)}
+                                type="radio" name={item.value} />
+                        </div>
+                    ))
+                }
             </div>
             <ul className="w-full flex flex-col items-center lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
                 {showedL.map((item, index) =>
@@ -180,8 +176,8 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                         <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
                                 <Link href={`/s/${item.finalCode}`} className="text-lg font-bold text-red-600">{domain?.substring(7)}/s/{item.finalCode}</Link>
-                                <a target="_blank" 
-                                    rel="noopener noreferrer" href={item.mainUrl} 
+                                <a target="_blank"
+                                    rel="noopener noreferrer" href={item.mainUrl}
                                     className="text-xs mb-2 text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
                                 <QRCode
                                     value={`${domain}/s/${item.finalCode}`}
@@ -190,10 +186,10 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                                     fgColor="#000000"
                                 />
                             </div>
-                            <div className="flex flex-1 flex-col justify-between gap-2 text-sm m-2">
+                            <div className="flex flex-1 flex-col justify-between gap-2 text-sm">
                                 <div className="text-xs text-gray-400">
                                     <span className="block">انقضا:</span>
-                                <span className="">{timeLeft(item.expiresAt)}</span>
+                                    <span className="">{timeLeft(item.expiresAt)}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <Link
