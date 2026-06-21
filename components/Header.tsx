@@ -18,10 +18,10 @@ export default function Header() {
     return (
         <header className="bg-white">
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
-                <Link href="/" className="text-md font-bold flex items-center gap-1 text-red-500"
+                <Link href="/" className="text-md font-bold flex items-center gap-1 text-indigo-800"
                     onClick={() => setIsMenuOpen(false)}>
                     Link Sortener
-                    <Scissors size={20} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="red" />
+                    <Scissors size={22} className="rotate-90" fontWeight={"bold"} strokeWidth={2.5} color="indigo" />
                 </Link>
 
                 <nav className="hidden sm:flex items-center">
