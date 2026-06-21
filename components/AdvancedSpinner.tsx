@@ -1,5 +1,3 @@
-// components/AdvancedSpinner.tsx
-// این کد توسط هوش مصنوعی ساخته شده است
 import React from "react";
 
 interface AdvancedSpinnerProps {
