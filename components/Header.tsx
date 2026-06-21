@@ -16,7 +16,7 @@ export default function Header() {
     }
 
     return (
-        <header className="bg-white shadow-md">
+        <header className="bg-white shadow-md sticky top-0 z-10">
             <div className="container mx-auto md:px-24 flex items-center justify-between px-4 py-4">
                 <Link href="/" className="text-lg font-bold flex items-center gap-1 text-indigo-800"
                     onClick={() => setIsMenuOpen(false)}>

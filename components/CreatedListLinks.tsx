@@ -122,7 +122,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
     return (
         <div className="relative px-3 py-2 md:px-9 md:py-6 flex flex-col gap-3 rounded-4 border-gray-200">
             <div className="flex flex-row items-center justify-between mb-3">
-                <h2 className="text-center text-gray-600 font-bold text-3xl">لیست لینک های کوتاه شده:</h2>
+                <h2 className="text-center text-gray-600 font-bold text-xl md:text-3xl">لیست لینک های کوتاه شده:</h2>
                 <ArrowLeft size={24} color="gray"
                     className="cursor-pointer p-0.5"
                     onClick={() => {
