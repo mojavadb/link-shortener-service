@@ -7,7 +7,13 @@ import { auth } from '@/auth';
 
 export async function GET() {
   try {
-    const links = await prisma.linkItem.findMany();
+    const session = await auth();
+    if (!session?.user){
+      NextResponse.redirect("/auth")
+    }
+    const links = await prisma.linkItem.findMany({
+      where: {creatorId: session?.user?.id}
+    });
     return NextResponse.json(links);
   } catch (error) {
     return NextResponse.json(
