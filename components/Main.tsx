@@ -14,7 +14,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
     const [generatedCode, setGeneratedCode] = React.useState<string>("");
     const [errors, setErrors] = React.useState<string[]>([]);
     
-    if (load === true) return <AdvancedSpinner text="در حال بارگزاری" fullScreen={true} />;
+    if (load === true) return <AdvancedSpinner text="در حال پردازش" fullScreen={true} />;
     return (
         <main className="flex items-start justify-center p-6">
             <div>
