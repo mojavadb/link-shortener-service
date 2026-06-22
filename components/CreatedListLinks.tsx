@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
 import { ArrowLeft, Check, Clock, Copy, Edit, Eye, Trash, X } from "lucide-react";
 import QRCode from "react-qr-code";
+import useSWR from "swr";
+import AdvancedSpinner from "./AdvancedSpinner";
 
+const fetcher = (url: string) => fetch(url).then(r => r.json());
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
 type SortedStates =
@@ -20,7 +23,7 @@ const sortOptions = [
     { value: "createtime", label: "زمان ساخت" },
 ] as const;
 
-export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
+export default function CreatedListLinks({ initialData }: { initialData: LinkItem[] }) {
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
     const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
     const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
@@ -31,6 +34,13 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
     const [searchL, setSearchL] = React.useState<string>("");
 
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
+
+    const { data = [], isLoading, error, mutate } = useSWR<LinkItem[]>("/api/short-links", fetcher, {
+        fallbackData: initialData,
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        refreshInterval: 10000,
+    }); 
 
     const sortedLinks = [...data].sort((a, b) => {
         switch (sortedBy) {
@@ -134,6 +144,8 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
         setDeletedAt(null);
     }
 
+    if (isLoading) return <AdvancedSpinner text="در حال بارگزاری" fullScreen={true} />
+
     return (
         <div className="relative px-3 py-2 md:px-9 md:py-6 flex flex-col gap-3 rounded-4 border-gray-200">
             <div className="flex flex-row items-center justify-between mb-3">
@@ -184,7 +196,7 @@ export default function CreatedListLinks({ data }: { data: LinkItem[] }) {
                     <li key={item.id} className="border mb-5 md:mb-0 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
                         <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
-                                <Link href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain?.substring(7)}/s/{item.finalCode}</Link>
+                                <a target="_blank" href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain?.substring(7)}/s/{item.finalCode}</a>
                                 <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl}
                                     className="text-xs mb-2 text-gray-600">{item.mainUrl.slice(8, 40)}...</a>
