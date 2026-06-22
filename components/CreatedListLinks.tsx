@@ -30,7 +30,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
     const [now, setNow] = React.useState<number>(Date.now());
 
-    const [sortedBy, setSortedBy] = React.useState<SortedStates>("expiration");
+    const [sortedBy, setSortedBy] = React.useState<SortedStates>("click");
     const [searchL, setSearchL] = React.useState<string>("");
 
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
@@ -39,7 +39,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
         fallbackData: initialData,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
-        refreshInterval: 10000,
+        refreshInterval: 12000,
     }); 
 
     const sortedLinks = [...data].sort((a, b) => {
@@ -125,10 +125,12 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
         setDeletedAt(Date.now());
 
         const timeout = setTimeout(async () => {
+            // هدف دقت بالا در نمایش UI است پس revalidate میکنیم.
+            mutate((prev = []) => prev.filter(item => item.id !== id), true);
             await fetch(`/api/short-links?id=${id}`, {
                 method: "DELETE",
             });
-            router.refresh();
+            mutate();
             setDeletedL(null);
         }, 3000);
 
