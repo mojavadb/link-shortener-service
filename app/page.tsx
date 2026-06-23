@@ -15,7 +15,7 @@ async function Home() {
   console.log(sessions);
   // if (!session?.user) redirect("/auth");
   return (
-      <Main data={links} />
+      <Main />
   );
 }
 
