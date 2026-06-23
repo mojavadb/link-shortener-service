@@ -12,7 +12,13 @@ export async function GET() {
       NextResponse.redirect("/auth")
     }
     const links = await prisma.linkItem.findMany({
-      where: {creatorId: session?.user?.id}
+      where: {
+        creatorId: session?.user?.id,
+        OR: [
+          {expiresAt: null},
+          {expiresAt: { gt: new Date() }}
+        ]
+      }
     });
     return NextResponse.json(links);
   } catch (error) {
