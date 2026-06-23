@@ -22,7 +22,7 @@ export default function Main({ data }: { data: LinkItem[] }) {
                     <ShowResult text={`${domain}/s/${generatedCode}`} />
                     :        
                     <LinkMaker errors={errors} setErrors={setErrors}
-                    data={data} setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
+                    setLoad={setLoad} setGeneratedCode={setGeneratedCode} />
                 }
             </div>
         </main>

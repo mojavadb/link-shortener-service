@@ -1,7 +1,6 @@
 'use client';
 
 import React from "react";
-import { LinkItem } from "@/app/generated/prisma/client";
 import { CaseLower, Link, ShieldOff } from "lucide-react";
 
 async function createNewLink(url: string, code: string, expiredLeft: number) {
@@ -27,8 +26,8 @@ async function createNewLink(url: string, code: string, expiredLeft: number) {
 }
 
 export default function LinkMaker(
-    { data, setLoad, setGeneratedCode, errors, setErrors } :
-    { data: LinkItem[], setGeneratedCode: any, setLoad: any, errors: string[], setErrors: any }
+    { setLoad, setGeneratedCode, errors, setErrors } :
+    { setGeneratedCode: any, setLoad: any, errors: string[], setErrors: any }
 ) {
     // V = Value // L = Link
     const [inputV, setInputV] = React.useState<string>("");
