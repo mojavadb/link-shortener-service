@@ -32,9 +32,6 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
-      NextResponse.redirect("/auth")
-    }
     const body = await request.json();
     const { inputV, customCode, expiredLeft }: { inputV: string, customCode: string, expiredLeft: number } = body;
     const errors: string[] = [];
