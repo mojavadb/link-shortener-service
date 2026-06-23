@@ -18,11 +18,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
         });
         return <div className="flex items-center justify-center py-12">این لینک منقضی شده است</div>
     }
-    await prisma.linkItem.update({
-        where: { finalCode: slug },
-        data: {
-            clicks: { increment: 1 }
-        }
+    await prisma.click.create({
+        data: { linkId: link.id }
     });
+
     redirect(link.mainUrl)
 }

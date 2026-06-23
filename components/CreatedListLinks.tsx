@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LinkItem } from "@/app/generated/prisma/client";
+import { Click, LinkItem } from "@/app/generated/prisma/client";
 import { ArrowLeft, Check, Clock, Copy, Edit, Eye, Link2, Send, Trash, X } from "lucide-react";
 import QRCode from "react-qr-code";
 import useSWR from "swr";
@@ -11,7 +11,7 @@ import AdvancedSpinner from "./AdvancedSpinner";
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
-
+type LinkItemWithClicks = LinkItem & {clicks: Click[]};
 type SortedStates =
     | "expiration"
     | "click"
@@ -23,7 +23,7 @@ const sortOptions = [
     { value: "createtime", label: "زمان ساخت" },
 ] as const;
 
-export default function CreatedListLinks({ initialData }: { initialData: LinkItem[] }) {
+export default function CreatedListLinks({ initialData }: { initialData: LinkItemWithClicks[] }) {
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
     const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
     const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
@@ -37,7 +37,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
     const [showToast, setShowToast] = React.useState<string>("");
 
-    const { data = [], isLoading, error, mutate } = useSWR<LinkItem[]>("/api/short-links", fetcher, {
+    const { data = [], isLoading, error, mutate } = useSWR<LinkItemWithClicks[]>("/api/short-links", fetcher, {
         fallbackData: initialData,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
@@ -47,7 +47,9 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
     const sortedLinks = [...data].sort((a, b) => {
         switch (sortedBy) {
             case "click":
-                return b.clicks - a.clicks;
+                return (
+                    b.clicks.length - a.clicks.length
+                );
             case "expiration":
                 return (
                     new Date(b.expiresAt ?? 0).getTime() -
@@ -233,7 +235,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                                 <div className="text-gray-500">
                                     <div className="text-rose-600 text-xs flex items-center gap-1 mb-1">
                                         <Eye size={12} />
-                                        {item.clicks}
+                                        {item.clicks.length}
                                         <span>بازدید</span>
                                     </div>
                                     <div className="flex flex-row gap-1 items-center">

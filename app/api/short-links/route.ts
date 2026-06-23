@@ -18,6 +18,9 @@ export async function GET() {
           {expiresAt: null},
           {expiresAt: { gt: new Date() }}
         ]
+      },
+      include: {
+        clicks: true
       }
     });
     return NextResponse.json(links);
@@ -179,6 +182,9 @@ export async function PUT(request: NextRequest) {
       where: {
         id,
       },
+      include:{
+        clicks: true
+      }
     });
 
     if (!link) {
@@ -221,9 +227,13 @@ export async function PUT(request: NextRequest) {
     };
     console.log(endexpire);
     if (resetClicks === true) {
-      data.clicks = 0;
+      await prisma.click.deleteMany({
+        where: {
+          linkId: id
+        }
+      });
     }
-    if (endexpire === false) {
+    if (!endexpire) {
       data.expiresAt = null;
     }
 
