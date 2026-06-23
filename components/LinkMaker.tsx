@@ -1,7 +1,6 @@
 'use client';
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
 import { CaseLower, Link, ShieldOff } from "lucide-react";
 
@@ -38,41 +37,6 @@ export default function LinkMaker(
     const [dayV, setDayV] = React.useState<number>(0);
     const [hourV, setHourV] = React.useState<number>(0);
     const [minuteV, setMinuteV] = React.useState<number>(0);
-
-    const router = useRouter();
-
-    const checkExpired = React.useCallback(async () => {
-        const now = Date.now();
-
-        const expiredLinks = data.filter(link => {
-            if (!link.expiresAt) return false;
-            return new Date(link.expiresAt).getTime() <= now;
-        });
-
-        if (expiredLinks.length === 0) return;
-
-        try {
-            await Promise.all(
-                expiredLinks.map(link =>
-                    fetch(`/api/short-links?id=${link.id}`, {
-                        method: "DELETE",
-                    })
-                )
-            );
-
-            router.refresh();
-        } catch (err) {
-            console.error("Auto delete failed:", err);
-        }
-    }, [data, router]);
-
-    React.useEffect(() => {
-        checkExpired();
-
-        const interval = setInterval(checkExpired, 1000);
-
-        return () => clearInterval(interval);
-    }, [checkExpired]);
 
     async function handleSubmit(e: any) {
         e.preventDefault();
