@@ -7,7 +7,8 @@ export default async function Page() {
         redirect("/")
     }
     return (
-        <div className="flex justify-center items-center min-h-screen">
+        <div className="absolute top-0 right-0 flex justify-center items-center 
+        w-full min-h-screen z-50 bg-white">
             <div>
                 <h3 className="text-center mb-8 text-3xl font-bold">
                     ورود به حساب کاربری
