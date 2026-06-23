@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LinkItem } from "@/app/generated/prisma/client";
-import { ArrowLeft, Check, Clock, Copy, Edit, Eye, Trash, X } from "lucide-react";
+import { ArrowLeft, Check, Clock, Copy, Edit, Eye, Link2, Send, Trash, X } from "lucide-react";
 import QRCode from "react-qr-code";
 import useSWR from "swr";
 import AdvancedSpinner from "./AdvancedSpinner";
@@ -35,12 +35,14 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
 
+    const [showToast, setShowToast] = React.useState<string>("");
+
     const { data = [], isLoading, error, mutate } = useSWR<LinkItem[]>("/api/short-links", fetcher, {
         fallbackData: initialData,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
         refreshInterval: 20000,
-    }); 
+    });
 
     const sortedLinks = [...data].sort((a, b) => {
         switch (sortedBy) {
@@ -97,6 +99,28 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
         return `${parts.join(" و ")}`;
     }
+
+    async function handleShareLink (id: number, finalCode: string) {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'لینک اشتراک‌گذاری',
+                    text: 'این لینک رو ببینید:',
+                    url: finalCode,
+                });
+                setShowToast("اشتراک‌گذاری با موفقیت انجام شد");
+                setTimeout(() => setShowToast(""), 2000);
+            } catch (err) {
+                console.error("Error sharing:", err);
+                if ((err as Error).name !== 'AbortError') {
+                    setShowToast("خطا در اشتراک‌گذاری");
+                    setTimeout(() => setShowToast(""), 2000);
+                }
+            }
+        } else {
+            await handleCopy(id, `${domain}/s/${finalCode}`);
+        }
+    };
 
     const handleCopy = async (id: number, url: string) => {
         try {
@@ -219,6 +243,11 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                                 </div>
                                 <div className="flex items-center justify-end gap-3">
                                     <button type="button" className="cursor-pointer"
+                                        onClick={() => handleShareLink(item?.id, item.finalCode)}
+                                    >
+                                        <Send size={16} />
+                                    </button>
+                                    <button type="button" className="cursor-pointer"
                                         onClick={() => handleCopy(item?.id, `${domain}/s/${item.finalCode}`)}
                                     >
                                         {copiedId === item?.id ? <Check size={16} /> : <Copy size={16} />}
@@ -230,7 +259,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                                         <Edit size={16} />                                    </Link>
                                     <button type="button"
                                         disabled={deletedL ? true : false}
-                                        className="text-red-600 cursor-pointer p-1"
+                                        className="text-red-600 cursor-pointer"
                                         onClick={(e) => handleDelete(e, item.id)}
                                     >
                                         <Trash size={16} />
