@@ -39,7 +39,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
         fallbackData: initialData,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
-        refreshInterval: 12000,
+        refreshInterval: 20000,
     }); 
 
     const sortedLinks = [...data].sort((a, b) => {
@@ -80,10 +80,6 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
         const remaining = new Date(expiresAt).getTime() - now;
 
-        if (remaining <= 0) {
-            return "منقضی شده";
-        };
-
         const days = Math.floor(remaining / 86400000);
         const hours = Math.floor((remaining % 86400000) / 3600000);
         const minutes = Math.floor((remaining % 3600000) / 60000);
@@ -95,7 +91,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
         if (hours > 0) parts.push(`${hours} ساعت`);
         if (minutes > 0) parts.push(`${minutes} دقیقه`);
 
-        if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
+        if ((days === 0 && hours === 0 && minutes === 0 && seconds > 0) || (remaining < 0)) {
             return "چند لحظه دیگر"
         }
 
