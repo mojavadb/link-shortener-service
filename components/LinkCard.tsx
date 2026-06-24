@@ -6,6 +6,7 @@ import QRCode from "react-qr-code";
 import Link from "next/link";
 import React from "react";
 import { KeyedMutator } from "swr";
+import DetailClicks from "./DetailClicks";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
@@ -15,9 +16,9 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);
     const [undoTimeout, setUndoTimeout] = React.useState<NodeJS.Timeout | null>(null);
     const [deletedAt, setDeletedAt] = React.useState<number | null>(null);
-    
+
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
-    
+
     const [now, setNow] = React.useState<number>(Date.now());
     React.useEffect(() => {
         const timer = setInterval(() => {
@@ -113,7 +114,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
 
         return `${parts.join(" و ")}`;
     }
-    
+
     return (
         <>
             <ul className="w-full flex flex-col items-center lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
@@ -137,7 +138,8 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
                                     <div className="text-rose-600 text-xs flex items-center gap-1 mb-1">
                                         <Eye size={12} />
                                         {item.clicks.length}
-                                        <span>بازدید</span>
+                                        <span>بازدید -</span>
+                                        <DetailClicks item={item} />
                                     </div>
                                     <div className="flex flex-row gap-1 items-center">
                                         <Clock size={12} />
