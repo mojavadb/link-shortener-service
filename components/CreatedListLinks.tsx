@@ -35,8 +35,6 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
 
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
 
-    const [showToast, setShowToast] = React.useState<string>("");
-
     const { data = [], isLoading, error, mutate } = useSWR<LinkItemWithClicks[]>("/api/short-links", fetcher, {
         fallbackData: initialData,
         revalidateOnFocus: true,
@@ -110,13 +108,10 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                     text: 'این لینک رو ببینید:',
                     url: finalCode,
                 });
-                setShowToast("اشتراک‌گذاری با موفقیت انجام شد");
-                setTimeout(() => setShowToast(""), 2000);
             } catch (err) {
                 console.error("Error sharing:", err);
                 if ((err as Error).name !== 'AbortError') {
-                    setShowToast("خطا در اشتراک‌گذاری");
-                    setTimeout(() => setShowToast(""), 2000);
+                    console.log(err);
                 }
             }
         } else {
