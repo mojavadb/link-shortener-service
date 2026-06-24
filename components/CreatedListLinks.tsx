@@ -70,7 +70,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                 <ArrowLeft size={24} color="gray"
                     className="cursor-pointer p-0.5"
                     onClick={() => {
-                        router.back();
+                        router.replace("/");
                     }} />
             </div>
             <form className="flex flex-col items-center justify-center">
