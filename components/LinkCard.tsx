@@ -19,7 +19,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
 
     const [copiedId, setCopiedId] = React.useState<number | null>(null);
 
-    const [now, setNow] = React.useState<number>(Date.now());
+    const [now, setNow] = React.useState<number>(() => Date.now());
     React.useEffect(() => {
         const timer = setInterval(() => {
             setNow(Date.now());
