@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String          @id @default(cuid())
+  name            String?
+  email           String          @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links         LinkItem[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique @id
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LinkItem {
+  id        Int       @id @default(autoincrement())
+  finalCode String    @unique
+  mainUrl   String
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  clicks Click[]
+
+  creatorId String?
+  creator   User?     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+}
+
+model Click {
+  id        Int   @id @default(autoincrement())
+  linkId    Int 
+  link      LinkItem     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * sign in / log in => 2 ways (google, password)
+ * if (google) everything done with libraries
+ * if (password) name = a random name give to user
+ * user can change the name manually in setting
+ * add submit to phone number later
+ * totaly name automically created and update by user later, password must created by user
+ * if (log in)  in app/page.tsx: logout btn, go to app btn
+ * if (!log in) in app/page.tsx: login btn, signin btn
+ * // later
+ * user can create new account or user can switch between accounts
+ */

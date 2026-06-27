@@ -1,50 +1,41 @@
 export function validateUrl (url: string): {isValid: boolean, error?: string} {
 
   if (!url || url.trim() === "") {
-    return { isValid: false, error: "ورودی ارسالی خالی است." };
+    return { isValid: false, error: " آدرس نباید خالی باشد" };
   }
 
   const trimmedUrl = url.trim();
 
-  // 2. بررسی حداقل طول (مثلاً حداقل 5 کاراکتر)
   if (trimmedUrl.length < 5) {
-    return { isValid: false, error: "ورودی ارسالی بسیار کوچک است" };
+    return { isValid: false, error: " آدرس بسیار کوچک است" };
   }
 
-  // 3. بررسی حداکثر طول (اختیاری)
   if (trimmedUrl.length > 2048) {
-    return { isValid: false, error: "ورودی ارسالی بسیار بزرگ است" };
+    return { isValid: false, error: "آدرس بسیار بزرگ است" };
   }
 
-  // 4. بررسی وجود پروتکل (http://, https://, ftp://)
   let urlToCheck = trimmedUrl;
   if (!/^https?:\/\//i.test(trimmedUrl)) {
-    // اگر پروتکل ندارد، https:// اضافه می‌کنیم برای بررسی
     urlToCheck = "https://" + trimmedUrl;
   }
 
-  // 5. اعتبارسنجی با regex پیشرفته
   const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
   
   if (!urlPattern.test(trimmedUrl) && !urlPattern.test(urlToCheck)) {
-    return { isValid: false, error: "فرمت لینک صحیح نیست" };
+    return { isValid: false, error: "فرمت  آدرس صحیح نیست" };
   }
 
-  // 6. بررسی با URL constructor (روش مدرن)
   try {
     const urlObject = new URL(urlToCheck);
     
-    // اعتبارسنجی پروتکل
     if (!["http:", "https:", "ftp:"].includes(urlObject.protocol)) {
-      return { isValid: false, error: "پروتکل پشتیبانی نمی‌شود. فقط http:// و https://" };
+      return { isValid: false, error: "پروتکل از  آدرس پشتیبانی نمیکند. فقط http:// و https://" };
     }
     
-    // بررسی وجود hostname
     if (!urlObject.hostname || urlObject.hostname === "") {
-      return { isValid: false, error: "دامنه لینک معتبر نیست" };
+      return { isValid: false, error: "دامنه  آدرس معتبر نیست" };
     }
-    
-    // بررسی IP های خصوصی و localhost (اختیاری - برای امنیت)
+
     const hostname = urlObject.hostname.toLowerCase();
     if (
       hostname === "localhost" ||
@@ -53,17 +44,16 @@ export function validateUrl (url: string): {isValid: boolean, error?: string} {
       hostname.startsWith("10.") ||
       hostname.startsWith("172.")
     ) {
-      return { isValid: false, error: "لینک‌های داخلی پشتیبانی نمی‌شوند" };
+      return { isValid: false, error: "آدرس های داخلی پشتیبانی نمی‌شوند" };
     }
     
-    // بررسی طول کلی لینک
     if (urlObject.toString().length > 2048) {
-      return { isValid: false, error: "لینک بسیار طولانی است" };
+      return { isValid: false, error: "آدرس بسیار طولانی است" };
     }
     
     return { isValid: true };
     
   } catch (error) {
-    return { isValid: false, error: "فرمت لینک نامعتبر است" };
+    return { isValid: false, error: "فرمت آدرس نامعتبر است" };
   }
 };

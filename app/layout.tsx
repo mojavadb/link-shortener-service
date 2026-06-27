@@ -1,6 +1,8 @@
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
 import { Metadata } from "next";
+import Header from "@/components/Header";
+import { SessionProvider } from "next-auth/react";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -21,7 +23,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.className}>
-      <body>{children}</body>
+      <body
+      cz-shortcut-listen="true"
+      >
+        <SessionProvider>
+          <Header />
+          <main>{children}</main>
+        </SessionProvider>
+      </body>
     </html>
   );
 }
