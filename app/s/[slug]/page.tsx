@@ -1,10 +1,9 @@
-import type { LinkItem } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: { slug: string } }) {
     const { slug } = await params;
-    const link: LinkItem | null = await prisma.linkItem.findUnique({
+    const link = await prisma.linkItem.findUnique({
         where: { finalCode: slug },
     });
     if (!link) {

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Click, LinkItem } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { Check, Clock, Copy, Edit, Eye, Send, Trash } from "lucide-react";
 import QRCode from "react-qr-code";
 import Link from "next/link";
@@ -10,7 +10,12 @@ import DetailClicks from "./DetailClicks";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
-type LinkItemWithClicks = LinkItem & { clicks: Click[] };
+type LinkItemWithClicks = Prisma.LinkItemGetPayload<{
+  include: {
+    clicks: true;
+  };
+}>;
+type LinkItem = Prisma.LinkItemGetPayload<{}>;
 
 export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithClicks[], mutate: KeyedMutator<LinkItemWithClicks[]> }) {
     const [deletedL, setDeletedL] = React.useState<LinkItem | null>(null);

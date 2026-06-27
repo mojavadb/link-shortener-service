@@ -2,15 +2,20 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import type { Click, LinkItem } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
 import useSWR from "swr";
 import AdvancedSpinner from "./AdvancedSpinner";
 import LinkCard from "./LinkCard";
+import { Prisma } from "@prisma/client";
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
-type LinkItemWithClicks = LinkItem & { clicks: Click[] };
+type LinkItemWithClicks = Prisma.LinkItemGetPayload<{
+  include: {
+    clicks: true;
+  };
+}>;
+
 type SortedStates =
     | "expiration"
     | "click"

@@ -1,14 +1,12 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import type { Click, LinkItem } from "@prisma/client";
 import { prisma } from "@/prisma";
 import CreatedListLinks from "@/components/CreatedListLinks";
-type LinkItemWithClicks = LinkItem & {clicks: Click[]};
 
 export default async function CreatedLinks() {
     const session = await auth();
     if (!session?.user) redirect("/auth");
-    const links: LinkItemWithClicks[] = await prisma.linkItem.findMany({
+    const links = await prisma.linkItem.findMany({
         where: {
             creatorId: session?.user?.id
         },

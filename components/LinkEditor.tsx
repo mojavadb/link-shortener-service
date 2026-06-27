@@ -1,6 +1,6 @@
 "use client";
 
-import type { LinkItem } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { ArrowLeft, CaseLower, Check, Link, MousePointerClick, ShieldOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -11,6 +11,9 @@ interface ApiResponse {
         message?: string[];
     };
 }
+
+type LinkItem = Prisma.LinkItemGetPayload<{}>;
+
 
 async function updateLink(
     url: string,

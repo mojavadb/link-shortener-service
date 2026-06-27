@@ -1,10 +1,14 @@
 "use client";
 
-import type { Click, LinkItem } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { X } from "lucide-react";
 import React from "react";
 
-type LinkItemWithClicks = LinkItem & { clicks: Click[] };
+type LinkItemWithClicks = Prisma.LinkItemGetPayload<{
+  include: {
+    clicks: true;
+  };
+}>;
 
 export default function DetailClicks({ item }: { item: LinkItemWithClicks }) {
   const [isDetailOpen, setIsDetailOpen] = React.useState<number>(-1);
