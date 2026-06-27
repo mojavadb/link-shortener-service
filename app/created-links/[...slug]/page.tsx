@@ -1,4 +1,4 @@
-import { LinkItem } from "@/app/generated/prisma/client";
+import type { LinkItem } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import LinkEditor from "@/components/LinkEditor"

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Click, LinkItem } from "../generated/prisma/client";
+import type { Click, LinkItem } from "@prisma/client";
 import { prisma } from "@/prisma";
 import CreatedListLinks from "@/components/CreatedListLinks";
 type LinkItemWithClicks = LinkItem & {clicks: Click[]};

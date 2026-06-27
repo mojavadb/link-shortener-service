@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkItem } from "@/app/generated/prisma/client";
+import type { LinkItem } from "@prisma/client";
 import { ArrowLeft, CaseLower, Check, Link, MousePointerClick, ShieldOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";

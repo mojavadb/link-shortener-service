@@ -1,6 +1,6 @@
 "use client";
 
-import { Click, LinkItem } from "@/app/generated/prisma/client";
+import type { Click, LinkItem } from "@prisma/client";
 import { X } from "lucide-react";
 import React from "react";
 

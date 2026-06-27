@@ -1,4 +1,4 @@
-import { LinkItem } from "@/app/generated/prisma/client";
+import type { LinkItem } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { redirect } from 'next/navigation';
 

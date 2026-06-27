@@ -1,6 +1,6 @@
 import Main from "@/components/Main";
 import prisma from "@/lib/prisma";
-import { Account, LinkItem, User, Session } from "./generated/prisma/client";
+import type { User, Account, Session, LinkItem } from "@prisma/client"
 
 async function Home() {
   // چون اینجا سرور کامپوننته میتونیم داده رو مستقیما از پایگاه داده بیاریم

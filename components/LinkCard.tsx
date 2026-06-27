@@ -1,6 +1,6 @@
 "use client";
 
-import { Click, LinkItem } from "@/app/generated/prisma/client";
+import type { Click, LinkItem } from "@prisma/client";
 import { Check, Clock, Copy, Edit, Eye, Send, Trash } from "lucide-react";
 import QRCode from "react-qr-code";
 import Link from "next/link";

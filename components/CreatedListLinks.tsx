@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Click, LinkItem } from "@/app/generated/prisma/client";
+import type { Click, LinkItem } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
 import useSWR from "swr";
 import AdvancedSpinner from "./AdvancedSpinner";
