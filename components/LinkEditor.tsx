@@ -130,10 +130,10 @@ export default function LinkEditor({ link }: { link: LinkItem | null }) {
             duration-200 peer"
                 />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-center justify-between">
                 {link?.expiresAt &&
                     <>
-                        <label className="text-yellow-800 text-sm flex items-center justify-start gap-1" htmlFor="hasexpired">
+                        <label className="text-yellow-800 text-sm mb-2 md:mb-0 flex items-center justify-start gap-1" htmlFor="hasexpired">
                             {
                                 hasExpried ? (
                                     <>
