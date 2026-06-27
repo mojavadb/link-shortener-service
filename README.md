@@ -3,7 +3,6 @@
   <img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=flat&logo=typescript" alt="TypeScript">
   <img src="https://img.shields.io/badge/Prisma-7.8.0-2D3748?style=flat&logo=prisma" alt="Prisma">
   <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat&logo=postgresql" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat" alt="License">
   <img src="https://img.shields.io/badge/status-active-brightgreen?style=flat" alt="Status">
 </div>
 
@@ -19,7 +18,7 @@
 
 ## 📖 درباره پروژه
 
-**لینک‌شکن** یک سرویس کامل و تمام‌قد برای کوتاه‌سازی لینک‌های بلند است که با استفاده از **Next.js** و **TypeScript** توسعه داده شده است. این پروژه به شما امکان می‌دهد تا لینک‌های طولانی را به آدرس‌های کوتاه و قابل‌اشتراک‌گذاری تبدیل کنید و علاوه بر آن، قابلیت‌های پیشرفته‌ای مانند تنظیم زمان انقضا، کد سفارشی، و نمایش QR Code را نیز در اختیار داشته باشید.
+**لینک‌شکن** یک سرویس کامل برای کوتاه‌سازی لینک‌های بلند است که با استفاده از **Next.js** و **TypeScript** توسعه داده شده است. این پروژه به شما امکان را می‌دهد که لینک‌های طولانی را به آدرس‌های کوتاه و قابل‌اشتراک‌گذاری تبدیل کنید و علاوه بر آن، قابلیت‌های پیشرفته‌ای مانند تنظیم زمان انقضا، کد سفارشی، و نمایش QR Code را نیز در اختیار داشته باشید.
 
 با استفاده از **Prisma ORM** و پایگاه داده **PostgreSQL**، تمام داده‌ها به صورت امن و پایدار ذخیره می‌شوند و سیستم **احراز هویت** مبتنی بر `next-auth` امنیت دسترسی‌ها را تضمین می‌کند. این سرویس به صورت **فول استک** پیاده‌سازی شده و برای استفاده در دستگاه‌های مختلف با **طراحی واکنش‌گرا** بهینه شده است.
 
@@ -51,7 +50,7 @@
 
 ## 🛠️ تکنولوژی‌های استفاده شده
 
-| اولویت | تکنولوژی | نسخه | کاربرد |
+| شماره | تکنولوژی | نسخه | کاربرد |
 |---------|----------|------|---------|
 | 1️⃣ | **Next.js** | 16.2.6 | فریم‌ورک اصلی (Full-Stack) |
 | 2️⃣ | **React** | 19.2.4 | کتابخانه ساخت رابط کاربری |
@@ -132,8 +131,6 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 </details>
 
-> **⚠️ هشدار امنیتی:** فایل‌های `.env` و `.env.local` هرگز در Git قرار ندهید. نمونه آن را در `.env.example` ذخیره کنید.
-
 ### ۵. اعمال Migrationهای دیتابیس
 
 ```bash
@@ -159,37 +156,80 @@ http://localhost:3000
 
 ```
 link-shortener-service/
-├── src/
-│   ├── app/                    # صفحات و مسیرهای Next.js App Router
-│   │   ├── api/                # API Routes
-│   │   │   ├── auth/           # مسیرهای احراز هویت
-│   │   │   └── links/          # مدیریت لینک‌ها (CRUD)
-│   │   ├── dashboard/          # داشبورد کاربر
-│   │   ├── [shortCode]/        # مسیریابی داینامیک لینک‌ها
-│   │   └── layout.tsx          # چیدمان اصلی
-│   ├── components/             # کامپوننت‌های React
-│   │   ├── ui/                 # کامپوننت‌های UI
-│   │   └── forms/              # فرم‌ها و اعتبارسنجی
-│   ├── lib/                    # کتابخانه‌ها و ابزارها
-│   │   ├── prisma.ts           # کلاینت Prisma
-│   │   └── auth.ts             # پیکربندی next-auth
-│   └── types/                  # تعریف انواع TypeScript
-├── prisma/
-│   ├── schema.prisma           # مدل‌های دیتابیس
-│   └── migrations/             # فایل‌های Migration
-├── public/                     # فایل‌های استاتیک
-├── docker-compose.yml          # پیکربندی Docker
-├── .env.example                # نمونه متغیرهای محیطی
-├── .gitignore                  # فایل‌های ignored در Git
-├── package.json                # وابستگی‌ها و اسکریپت‌ها
-├── tsconfig.json               # تنظیمات TypeScript
-├── tailwind.config.js          # تنظیمات Tailwind CSS
-├── next.config.js              # تنظیمات Next.js
-└── README.md                   # همین فایل
+    ├── app/                                # صفحات و مسیرهای Next.js App Router
+    │   ├── api/
+    │   │   ├── auth/
+    │   │   │   └── [...nextauth]/
+    │   │   │       └── route.ts           # مسیر احراز هویت next-auth
+    │   │   └── short-links/
+    │   │       └── route.ts               # API مدیریت لینک‌های کوتاه
+    │   ├── auth/
+    │   │   └── page.tsx                   # صفحه ورود/خروج
+    │   ├── created-links/
+    │   │‌─────── page.tsx                  # صفحه نمایش همه لینک ها
+    │   │   └── [...slug]/
+    │   │       └── page.tsx               # ویرایش هر لینک در صفحه مجزا
+    │   ├── s/
+    │   │   └── [slug]/
+    │   │       └── page.tsx               # مسیریابی داینامیک لینک‌ها
+    │   ├── favicon.ico
+    │   ├── globals.css                    # استایل‌های سراسری
+    │   ├── layout.tsx                     # چیدمان اصلی برنامه
+    │   ├── loading.tsx                    # کامپوننت لودینگ
+    │   └── page.tsx                       # صفحه اصلی (داشبورد)
+    │
+    ├── components/                         # کامپوننت‌های React
+    │   ├── AdvancedSpinner.tsx            # اسپینر پیشرفته
+    │   ├── CreatedListLinks.tsx           # لیست لینک‌های ایجاد شده
+    │   ├── DetailClicks.tsx               # نمایش جزئیات کلیک‌ها
+    │   ├── Header.tsx                     # هدر برنامه
+    │   ├── LinkCard.tsx                   # کارت نمایش لینک
+    │   ├── LinkEditor.tsx                 # ویرایشگر لینک
+    │   ├── LinkMaker.tsx                  # ساخت لینک جدید
+    │   ├── Main.tsx                       # کامپوننت اصلی
+    │   ├── ShowResult.tsx                 # نمایش نتیجه
+    │   └── UserDropdown.tsx               # منوی کاربری
+    │
+    ├── lib/                                # کتابخانه‌ها و ابزارها
+    │   ├── prisma.ts                      # کلاینت Prisma
+    │   ├── prisma/                        # فایل‌های Prisma
+    │   │   ├── migrations/                # فایل‌های Migration
+    │   │   └── schema.prisma              # مدل‌های دیتابیس
+    │   └── node_modules/                  # وابستگی‌های نصب شده
+    │
+    ├── prisma/                             # پیکربندی Prisma
+    │   ├── migrations/                    # فایل‌های Migration
+    │   └── schema.prisma                  # مدل‌های دیتابیس
+    │
+    ├── utils/                              # توابع کمکی
+    │   └── urlValidator.ts                # اعتبارسنجی URL
+    │
+    ├── actions/                            # اکشن‌های سرور
+    │   └── deleteUser.ts                  # حذف کاربر
+    │
+    ├── .env                                # متغیرهای محیطی (محرمانه)
+    ├── .env.local                          # متغیرهای محیطی (عمومی)
+    ├── .gitignore                          # فایل‌های ignored در Git
+    ├── AGENTS.md                           # مستندات برای AI Agents
+    ├── auth.ts                             # پیکربندی next-auth
+    ├── CLAUDE.md                           # مستندات برای Claude AI
+    ├── curl                                # فایل تست curl (اختیاری)
+    ├── docker-compose.yml                  # پیکربندی Docker
+    ├── eslint.config.mjs                   # تنظیمات ESLint
+    ├── eslint.config.json                  # تنظیمات ESLint (JSON)
+    ├── EXPLANATION.md                      # توضیحات تکمیلی
+    ├── next-env.d.ts                       # تایپ‌های Next.js
+    ├── next.config.ts                      # تنظیمات Next.js
+    ├── package.json                        # وابستگی‌ها و اسکریپت‌ها
+    ├── pnpm-lock.yaml                      # قفل وابستگی‌های pnpm
+    ├── pnpm-workspace.yaml                 # تنظیمات workspace pnpm
+    ├── postcss.config.mjs                 # تنظیمات PostCSS
+    ├── prisma.config.ts                   # تنظیمات Prisma
+    ├── prisma.ts                           # کلاینت Prisma (نسخه دیگر)
+    ├── proxy.ts                            # تنظیمات پراکسی
+    ├── README.md                           # همین فایل
+    └── tsconfig.json                       # تنظیمات TypeScript
 ```
-
----
-
 ## 📡 مستندات API
 
 <details>
@@ -197,69 +237,27 @@ link-shortener-service/
 
 | متد | مسیر | توضیح | پارامترها | پاسخ نمونه |
 |-----|------|-------|-----------|------------|
-| `POST` | `/api/links` | ایجاد لینک کوتاه جدید | `{ "originalUrl": "...", "customCode?": "...", "expiresAt?": "..." }` | `{ "id": 1, "shortCode": "abc123", ... }` |
-| `GET` | `/api/links` | دریافت لیست لینک‌های کاربر | `?page=1&limit=10&sort=clicks` | `{ "links": [...], "total": 100 }` |
-| `PUT` | `/api/links/[id]` | ویرایش لینک | `{ "originalUrl": "...", "customCode?": "..." }` | `{ "id": 1, ... }` |
-| `DELETE` | `/api/links/[id]` | حذف لینک | - | `{ "message": "Link deleted" }` |
-| `GET` | `/[shortCode]` | بازدید از لینک کوتاه | - | `301 Redirect` به لینک اصلی |
-| `GET` | `/api/links/search` | جستجوی لینک‌ها | `?q=query` | `{ "links": [...] }` |
+| `POST` | `/api/short-links` | ایجاد لینک کوتاه جدید | `{ "inputV": "...", "customCode?": "...", "expiredLeft?": "..." }` |
+| `GET` | `/api/short-links` | دریافت لیست لینک‌های کاربر | `{ "links": [...], "total": 100 }` |
+| `PUT` | `/api/short-links/[id]` | ویرایش لینک مشخص | `{ "inputV": "...", "customCode?": "...", "endexpire?": "...",  "resetClicks?": "...", "id" : "..." }` |
+| `DELETE` | `/api/short-links/[id]` | حذف لینک | - | `{ "message": "Link deleted" }` |
+| `GET` | `/s/[shortCode]` | بازدید از لینک کوتاه | - | `301 Redirect` به لینک اصلی |
 
 </details>
 
 ---
 
-## 🧪 اجرای تست‌ها
+## 🧪 تست‌ها
 
-```bash
-# اجرای تمام تست‌ها
-pnpm test
+در حال حاضر تست‌های خودکاری برای این پروژه نوشته نشده است. در آینده برنامه‌ریزی برای اضافه کردن تست‌های واحد و یکپارچه‌سازی با استفاده از **Jest** و **React Testing Library** انجام خواهد شد.
 
-# اجرای تست‌ها با پوشش کد
-pnpm test:coverage
-
-# اجرای تست‌های خاص
-pnpm test -- --grep "نام تست"
-```
-
----
+اگر علاقه‌مند به مشارکت در نوشتن تست‌ها هستید، خوشحال می‌شویم! 🤝
 
 ## 🚀 استقرار (Deployment)
 
-### با Docker (تولید)
-
-```bash
-# ساخت ایمیج
-docker build -t link-shortener .
-
-# اجرا با متغیرهای محیطی
-docker run -p 3000:3000 --env-file .env link-shortener
-```
-
-### با Docker Compose (تولید)
-
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### روی سرور VPS (Ubuntu)
-
-```bash
-# نصب وابستگی‌ها
-sudo apt update
-sudo apt install nginx certbot nodejs npm
-
-# کلون و نصب
-git clone https://github.com/mojavadb/link-shortener-service.git
-cd link-shortener-service
-pnpm install
-pnpm build
-
-# اجرا با PM2
-npm install -g pm2
-pm2 start "pnpm start" --name link-shortener
-```
-
----
+### با Vercel و Neon
+پایگاه داده خود را در Neon بسازید و لینک نهایی پایگاه داده را در متغیر های محیطی به جای لینک پایگاه داده داکر قرار دهید.
+خود برنامه نکست جس را داخل ورسل بارگزاری کنید.
 
 ## 🤝 راهنمای مشارکت
 
@@ -283,7 +281,6 @@ pm2 start "pnpm start" --name link-shortener
 ### قوانین مشارکت
 
 - 📏 از **TypeScript** و قواعد ESLint استفاده کنید
-- ✅ حتماً برای تغییرات خود **تست** بنویسید
 - 📝 **مستندات** را در صورت نیاز به‌روز کنید
 - 🧹 کد خود را **تمیز** و **خوانا** نگه دارید
 
@@ -291,7 +288,7 @@ pm2 start "pnpm start" --name link-shortener
 
 ## 🧑‍💻 توسعه‌دهنده
 
-- **مجتبی ودود** - *توسعه‌دهنده اصلی* - [@mojavadb](https://github.com/mojavadb)
+- **محمد جواد بابایی** - *توسعه‌دهنده اصلی* - [@mojavadb](https://github.com/mojavadb)
 
 ---
 
@@ -304,16 +301,10 @@ pm2 start "pnpm start" --name link-shortener
 
 ---
 
-## 📄 لایسنس
-
-این پروژه تحت لایسنس **MIT** منتشر شده است. برای اطلاعات بیشتر فایل `LICENSE` را ببینید.
-
----
-
 ## 💡 نکات تکمیلی
 
 ### 🔤 فونت‌ها
-فونت‌ها از **Google Fonts** لود می‌شوند. در صورت عدم دسترسی به اینترنت، فقط ظاهر برنامه تحت تأثیر قرار می‌گیرد و عملکرد اصلی تغییری نمی‌کند.
+فونت‌ها از **Google Fonts** بارگزاری می‌شوند. در صورت عدم دسترسی به اینترنت، فقط ظاهر برنامه تحت تأثیر قرار می‌گیرد و عملکرد اصلی تغییری نمی‌کند.
 
 ### 🎨 بهبودهای آینده
 - ✨ بهبود رابط کاربری و انیمیشن‌ها
@@ -332,7 +323,5 @@ pm2 start "pnpm start" --name link-shortener
 ---
 
 <div align="center">
-  <sub>ساخته شده با ❤️ توسط مجتبی ودود</sub>
-  <br/>
-  <sub>⭐ اگر این پروژه برای شما مفید بود، به آن ستاره دهید!</sub>
+  <sub>⭐</sub>
 </div>
