@@ -317,8 +317,7 @@ link-shortener-service/
 ## 📞 ارتباط با ما
 
 - 🐛 گزارش باگ: [Issues](https://github.com/mojavadb/link-shortener-service/issues)
-- 📧 ایمیل: [ایمیل شما]
-- 💬 گفتگو: [لینک گروه/کانال]
+- 📧 ایمیل: m.j.babaee98@gmail.com
 
 ---
 
