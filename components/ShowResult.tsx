@@ -1,3 +1,5 @@
+"use client";
+
 import { Check, Copy } from "lucide-react";
 import React from "react";
 import QRCode from "react-qr-code";
