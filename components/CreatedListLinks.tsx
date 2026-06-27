@@ -30,7 +30,7 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
         fallbackData: initialData,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
-        refreshInterval: 20000,
+        refreshInterval: 30000,
     });
 
     const sortedLinks = [...data].sort((a, b) => {
