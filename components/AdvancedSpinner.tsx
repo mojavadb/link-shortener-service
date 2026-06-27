@@ -6,11 +6,11 @@ interface AdvancedSpinnerProps {
   fullScreen?: boolean;
 }
 
-const AdvancedSpinner: React.FC<AdvancedSpinnerProps> = ({ 
+function AdvancedSpinner ({ 
   size = 40, 
   text = "در حال پردازش...", 
   fullScreen = false 
-}) => {
+}: AdvancedSpinnerProps) {
   const spinnerContent = (
     <div className="flex flex-col items-center justify-center gap-3">
       {/* اسپینر مدرن با چند دایره */}
