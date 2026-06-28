@@ -127,7 +127,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
                     <li key={item.id} className="border mb-5 md:mb-0 w-full sm:w-96 md:min-w-96 border-gray-200 shadow-md p-3 relative">
                         <div className="flex flex-2 flex-col sm:flex-row align-center justify-start gap-6 mb-4">
                             <div className="flex flex-col items-center gap-1 text-sm" dir="ltr">
-                                <a target="_blank" href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain?.substring(7)}/s/{item.finalCode}</a>
+                                <a target="_blank" href={`/s/${item.finalCode}`} className="text-lg font-semibold text-slate-800 hover:text-red-500">{domain}/s/{item.finalCode}</a>
                                 <a target="_blank"
                                     rel="noopener noreferrer" href={item.mainUrl}
                                     className="text-xs mb-2 text-gray-600">{item.mainUrl.slice(8, 40)}...</a>

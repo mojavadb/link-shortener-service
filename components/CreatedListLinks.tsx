@@ -46,8 +46,8 @@ export default function CreatedListLinks({ initialData }: { initialData: LinkIte
                 );
             case "expiration":
                 return (
-                    new Date(b.expiresAt ?? 0).getTime() -
-                    new Date(a.expiresAt ?? 0).getTime()
+                    new Date(a.expiresAt ?? Date.now() + 365 * 24 * 60 * 60 * 1000).getTime() -
+                    new Date(b.expiresAt ?? Date.now() + 365 * 24 * 60 * 60 * 1000).getTime()
                 );
             case "createtime":
                 return (
