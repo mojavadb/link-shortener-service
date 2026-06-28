@@ -183,7 +183,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
             </ul>
             {deletedL && (() => {
                 const elapsed = now - (deletedAt || 0);
-                const remaining = Math.floor(3.49 - (elapsed / 1000));
+                const remaining = Math.floor(3 - (elapsed / 1000));
 
                 return (
                     <div className="text-center sticky left-auto right-auto bottom-2">
@@ -191,7 +191,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
                             className="md:w-64 px-12 text-sm h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                             onClick={(e) => handleUndoDelete(e)}
                         >
-                            لغو ({remaining})
+                            لغو ({remaining > 0 ? remaining : ""})
                         </button>
                     </div>
                 );
