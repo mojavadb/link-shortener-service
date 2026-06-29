@@ -190,8 +190,7 @@ export default function LinkCard({ showedL, mutate }: { showedL: LinkItemWithCli
                         <button type="button"
                             className="md:w-64 px-12 text-sm h-10 md:px-3 rounded-xl text-white bg-pink-800 cursor-pointer hover:bg-pink-700 transition-all duration-300"
                             onClick={(e) => handleUndoDelete(e)}
-                        >
-                            لغو ({remaining > 0 ? remaining : ""})
+                        > {remaining > 0 ? `لغو (${remaining})` : ""}
                         </button>
                     </div>
                 );
