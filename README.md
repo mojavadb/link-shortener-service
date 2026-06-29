@@ -11,7 +11,7 @@
 <div align="center">
   <h1>🔗 لینک‌شکن (Link Shortener Service)</h1>
   <p><strong>سرویس حرفه‌ای کوتاه‌سازی لینک با قابلیت‌های پیشرفته</strong></p>
-  <p>✨ <a href="http://localhost:3000">مشاهده دمو</a> ✨</p>
+  <p>✨ <a href="https://linqioo.vercel.app/">مشاهده دمو</a> ✨</p>
 </div>
 
 ---
